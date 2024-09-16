@@ -9,6 +9,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [
+          "var(--font-inter)",
+          "var(--font-noto-sans-jp)",
+          "Arial",
+          "Helvetica",
+          "sans-serif",
+        ],
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
