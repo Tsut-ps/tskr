@@ -21,7 +21,7 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { href: "/", label: "全体" },
+  { href: "/overview", label: "全体" },
   { href: "/tasks", label: "タスク" },
   { href: "/charts", label: "チャート" },
   { href: "/settings", label: "設定" },
