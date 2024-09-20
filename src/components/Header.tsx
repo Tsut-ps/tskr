@@ -13,12 +13,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Combobox } from "@/components/Combobox";
+import { ClientNavLink } from "./ClientNavLink";
+
+type NavItem = {
+  href: string;
+  label: string;
+};
+
+const navItems: NavItem[] = [
+  { href: "/", label: "全体" },
+  { href: "/tasks", label: "タスク" },
+  { href: "/charts", label: "チャート" },
+  { href: "/settings", label: "設定" },
+];
 
 export function Header() {
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 whitespace-nowrap">
       <Link
-        href="#"
+        href="/"
         className="flex items-center gap-2 text-lg font-semibold md:text-base"
       >
         <Package2 className="h-6 w-6" />
@@ -26,30 +39,9 @@ export function Header() {
       </Link>
       <Combobox />
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-        <Link
-          href="#"
-          className="text-foreground transition-colors hover:text-foreground"
-        >
-          全体
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          タスク
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          チャート
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          設定
-        </Link>
+        {navItems.map((item) => (
+          <ClientNavLink key={item.href} {...item} />
+        ))}
       </nav>
       <Sheet>
         <SheetTrigger asChild>
@@ -67,27 +59,9 @@ export function Header() {
               <Package2 className="h-6 w-6" />
               <span className="sr-only">tskr</span>
             </Link>
-            <Link href="#" className="hover:text-foreground">
-              全体
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              タスク
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              チャート
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              設定
-            </Link>
+            {navItems.map((item) => (
+              <ClientNavLink key={item.href} {...item} />
+            ))}
           </nav>
         </SheetContent>
       </Sheet>
@@ -112,7 +86,9 @@ export function Header() {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Name</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>tskr について</DropdownMenuItem>
+            <Link href="about">
+              <DropdownMenuItem>tskr について</DropdownMenuItem>
+            </Link>
             <DropdownMenuSeparator />
             <DropdownMenuItem>ログアウト</DropdownMenuItem>
           </DropdownMenuContent>
