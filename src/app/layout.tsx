@@ -3,6 +3,7 @@ import { Noto_Sans_JP, Inter } from "next/font/google";
 import clsx from "clsx";
 import "./globals.css";
 
+import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
@@ -34,6 +35,7 @@ export default function RootLayout({
         <Header />
         <div className="flex justify-center">{children}</div>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );
