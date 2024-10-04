@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { NavigationTabs } from "@/components/ui/tabs-navigation";
 import { Combobox } from "@/components/Combobox";
-import { ClientNavLink } from "./ClientNavLink";
+import { ClientNavLink } from "@/components/ClientNavLink";
 
 type NavItem = {
   href: string;
@@ -39,9 +40,7 @@ export function Header() {
       </Link>
       <Combobox />
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-        {navItems.map((item) => (
-          <ClientNavLink key={item.href} {...item} />
-        ))}
+        <NavigationTabs items={navItems} />
       </nav>
       <Sheet>
         <SheetTrigger asChild>
@@ -72,7 +71,7 @@ export function Header() {
             <Input
               type="search"
               placeholder="タスクを検索"
-              className="pl-8 sm:w-[240px] md:w-[200px] lg:w-[240px]"
+              className="pl-8 sm:w-[240px] md:w-[180px] lg:w-[240px]"
             />
           </div>
         </form>

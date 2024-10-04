@@ -42,7 +42,7 @@ export function Combobox() {
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[200px] justify-between"
+            className="md:w-[180px] lg:w-[240px] justify-between"
           >
             {value
               ? frameworks.find((framework) => framework.value === value)?.label
