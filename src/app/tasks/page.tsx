@@ -112,7 +112,7 @@ export default function Page() {
               <CardTitle className="text-xl font-medium">
                 {team.title}
               </CardTitle>
-              <CardDescription>X 件のタスク</CardDescription>
+                <CardDescription>{team.tasks}件のタスク</CardDescription>
             </div>
             <Button asChild size="sm" className="ml-auto gap-1">
               <Link href="#">
