@@ -10,6 +10,10 @@ import { Footer } from "@/components/Footer";
 export const metadata: Metadata = {
   title: "tskr",
   description: "ログイン不要の進捗管理ツール",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 const notoSansJP = Noto_Sans_JP({
