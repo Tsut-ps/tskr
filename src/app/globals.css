@@ -16,6 +16,14 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Hide scrollbar */
+  .scrollbar-hide {
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
 }
 
 @layer base {

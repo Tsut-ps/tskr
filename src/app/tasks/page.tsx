@@ -104,7 +104,7 @@ export default function Page() {
   };
 
   return (
-    <main className="flex gap-4 p-4 md:gap-6 md:py-8 overflow-x-auto w-full">
+    <main className="flex gap-4 p-4 md:gap-6 md:py-8 overflow-x-auto w-full scrollbar-hide">
       {teams.map((team) => (
         <div key={team.id} className="w-96 flex-none">
           <div className="flex flex-row items-center p-3">
