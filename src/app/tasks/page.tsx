@@ -130,13 +130,13 @@ export default function Page() {
                       <p className="text-sm font-medium leading-none pt-1">
                         {task.title}
                       </p>
-                      <p className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1">
                         {task.tags.map((tag, index) => (
                           <Badge key={index} variant="secondary">
                             {tag}
                           </Badge>
                         ))}
-                      </p>
+                      </div>
                     </div>
                     <div
                       className={clsx("ml-auto", getDateColor(task.dueDate))}
