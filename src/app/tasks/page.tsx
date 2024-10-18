@@ -127,7 +127,7 @@ export default function Page() {
                 <CardContent className="p-5">
                   <div className="flex items-center gap-4">
                     <div className="grid gap-2">
-                      <p className="text-sm font-medium leading-none pt-1">
+                      <p className="text-sm font-medium leading-none py-1">
                         {task.title}
                       </p>
                       <div className="flex flex-wrap gap-1">
