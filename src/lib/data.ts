@@ -1,5 +1,3 @@
-import { NextResponse } from "next/server";
-
 type Task = {
   id: number;
   title: string;
@@ -11,7 +9,13 @@ type Tasks = {
   [key: string]: Task[];
 };
 
-const tasks: Tasks = {
+type Teams = {
+  id: string;
+  title: string;
+  tasks: number;
+}[];
+
+export const tasks: Tasks = {
   music: [
     {
       id: 1,
@@ -73,11 +77,9 @@ const tasks: Tasks = {
   ],
 };
 
-export async function GET() {
-  return NextResponse.json(
-    {
-      tasks,
-    },
-    { status: 200 }
-  );
-}
+export const teams: Teams = [
+  { id: "music", title: "音源班", tasks: 3 },
+  { id: "band", title: "バンド班", tasks: 2 },
+  { id: "video", title: "映像班", tasks: 4 },
+  { id: "management", title: "マネジメント", tasks: 2 },
+];

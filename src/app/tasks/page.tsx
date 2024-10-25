@@ -1,6 +1,5 @@
 import Link from "next/link";
 import clsx from "clsx";
-import { headers } from "next/headers";
 
 import {
   Card,
@@ -11,44 +10,9 @@ import {
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
-type Task = {
-  id: number;
-  title: string;
-  tags: string[];
-  dueDate: number;
-};
-
-type Tasks = {
-  [key: string]: Task[];
-};
-
-type Teams = {
-  id: string;
-  title: string;
-  tasks: number;
-}[];
+import { teams, tasks } from "@/lib/data";
 
 export default async function Page() {
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-  const host = headers().get("host");
-
-  async function getTeams() {
-    const res = await fetch(`${protocol}://${host}/api/teams`);
-    const data = await res.json();
-    const teams: Teams = data.teams;
-    return teams;
-  }
-  async function getTasks() {
-    const res = await fetch(`${protocol}://${host}/api/tasks`);
-    const data = await res.json();
-    const tasks: Tasks = data.tasks;
-    return tasks;
-  }
-
-  const teams = await getTeams();
-  const tasks = await getTasks();
-
   const getDateColor = (dueDate: number) => {
     if (dueDate <= 0) return "text-red-500";
     if (dueDate <= 3) return "text-yellow-500";
