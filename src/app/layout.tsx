@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP, Inter } from "next/font/google";
 import clsx from "clsx";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/toaster";
@@ -36,6 +37,7 @@ export default function RootLayout({
       className={clsx(inter.variable, notoSansJP.variable, "font-sans")}
     >
       <body className="antialiased flex min-h-screen w-full flex-col">
+        <NextTopLoader showSpinner={false} />
         <Header />
         <div className="flex justify-center">{children}</div>
         <Footer />
