@@ -40,8 +40,6 @@ export default async function Page() {
   const getDueDay = (dueDate: string) => {
     const date = new Date(dueDate).getDate();
     const due = date - nowDate.getDate();
-    // console.log(now, date, due);
-
     return Math.floor(due);
   };
 
