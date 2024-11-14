@@ -1,5 +1,6 @@
 import Link from "next/link";
 import clsx from "clsx";
+import { createClient } from "@/utils/supabase/server";
 
 import {
   Card,
@@ -10,25 +11,55 @@ import {
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { teams, tasks } from "@/lib/data";
+
+const project_id: string = process.env.NEXT_PUBLIC_PROJECT_ID!;
 
 export default async function Page() {
-  const getDateColor = (dueDate: number) => {
-    if (dueDate <= 0) return "text-red-500";
-    if (dueDate <= 3) return "text-yellow-500";
+  // UST使用時も日本時間の日付を取得
+  const jstDate = new Date().toLocaleString("ja-JP", {
+    timeZone: "Asia/Tokyo",
+  });
+  const nowDate = new Date(jstDate);
+  console.log(nowDate, nowDate.getDate());
+
+  const supabase = await createClient();
+
+  // 外部キーに基づく関係の自動検出
+  const { data: teams } = await supabase
+    .from("teams")
+    .select(
+      `
+      *,
+      tasks(*, 
+        tags(*)
+      )
+    `
+    )
+    .eq("project_id", project_id);
+
+  const getDueDay = (dueDate: string) => {
+    const date = new Date(dueDate).getDate();
+    const due = date - nowDate.getDate();
+    // console.log(now, date, due);
+
+    return Math.floor(due);
+  };
+
+  const getDateColor = (dueDate: string) => {
+    const dueDay = getDueDay(dueDate);
+    if (dueDay <= 0) return "text-red-500";
+    if (dueDay <= 7) return "text-yellow-500";
     return "";
   };
 
   return (
     <main className="flex gap-4 p-4 md:gap-6 md:py-8 overflow-x-auto w-full scrollbar-hide">
-      {teams.map((team) => (
-        <div key={team.id} className="w-96 flex-none">
+      {teams?.map((team, index) => (
+        <div key={index} className="w-96 flex-none">
           <div className="flex flex-row items-center p-3">
             <div className="grid gap-1">
-              <CardTitle className="text-xl font-medium">
-                {team.title}
-              </CardTitle>
-              <CardDescription>{team.tasks}件のタスク</CardDescription>
+              <CardTitle className="text-xl font-medium">{team.name}</CardTitle>
+              <CardDescription>{team.tasks?.length}件のタスク</CardDescription>
             </div>
             <Button asChild size="sm" className="ml-auto gap-1">
               <Link href="#">
@@ -38,8 +69,8 @@ export default async function Page() {
             </Button>
           </div>
           <div className="grid gap-2">
-            {tasks[team.id]?.map((task) => (
-              <Card key={task.id}>
+            {team.tasks?.map((task, index) => (
+              <Card key={index}>
                 <CardContent className="p-5">
                   <div className="flex items-center gap-4">
                     <div className="grid gap-2">
@@ -47,18 +78,20 @@ export default async function Page() {
                         {task.title}
                       </p>
                       <div className="flex flex-wrap gap-1">
-                        {task.tags.map((tag, index) => (
+                        {task.tags?.map((tag, index) => (
                           <Badge key={index} variant="secondary">
-                            {tag}
+                            {tag.name}
                           </Badge>
                         ))}
                       </div>
                     </div>
-                    <div
-                      className={clsx("ml-auto", getDateColor(task.dueDate))}
-                    >
-                      残り{task.dueDate}日
-                    </div>
+                    {
+                      <div
+                        className={clsx("ml-auto", getDateColor(task.due_date))}
+                      >
+                        残り{getDueDay(task.due_date)}日
+                      </div>
+                    }
                   </div>
                 </CardContent>
               </Card>
