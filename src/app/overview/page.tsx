@@ -145,7 +145,18 @@ export default async function Page() {
               <CardTitle className="text-xl font-medium">
                 残り日数が短いタスク
               </CardTitle>
-              <CardDescription>一週間以内 X 件</CardDescription>
+              <CardDescription>
+                1週間以内
+                {
+                  tasks!.filter(
+                    (task) =>
+                      // 未完了かつ残り日数が7日以内のタスクの数をカウント
+                      !isCompletedTask(task.status) &&
+                      calcDaysLeft(task.due_date) <= 7
+                  ).length
+                }
+                件
+              </CardDescription>
             </div>
             <Button asChild size="sm" className="ml-auto gap-1">
               <Link href="#">
@@ -154,46 +165,41 @@ export default async function Page() {
               </Link>
             </Button>
           </CardHeader>
-          <CardContent className="grid gap-6">
+          {tasks!
+            .filter(
+              (task) =>
+                // 未完了かつ残り日数が7日以内のタスクの数をカウント
+                !isCompletedTask(task.status) &&
+                calcDaysLeft(task.due_date) <= 7
+            )
+            .sort((a, b) => calcDaysLeft(a.due_date) - calcDaysLeft(b.due_date))
+            .map((task, index) => (
+              <CardContent className="grid gap-6" key={index}>
             <div className="flex items-center gap-4">
               <div className="grid gap-1">
                 <p className="text-sm font-medium leading-none">
-                  ｢Remix it｣音源確認
+                      {task.title}
                 </p>
-                <p className="text-sm text-muted-foreground">#音源 #確認</p>
+                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                      <p>{task.teams?.name}</p>
+                      <Separator
+                        className="bg-zinc-700"
+                        orientation="vertical"
+                      />
+                      <p>{task.tags?.map((tag) => `#${tag.name} `)}</p>
               </div>
-              <div className="ml-auto text-red-600">期限切れ!</div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="grid gap-1">
-                <p className="text-sm font-medium leading-none">
-                  音源に関する事前アンケート
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  #アンケート #全員向け
-                </p>
+                  <div className={clsx("ml-auto", getDateColor(task.due_date))}>
+                    {
+                      // 残り日数が0日未満の場合は「(期限切れ)」と表示
+                      calcDaysLeft(task.due_date) < 0
+                        ? "(期限切れ)"
+                        : `残り${calcDaysLeft(task.due_date)}日`
+                    }
               </div>
-              <div className="ml-auto">残り2日</div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="grid gap-1">
-                <p className="text-sm font-medium leading-none">
-                  ｢Nothing?｣背景映像確認
-                </p>
-                <p className="text-sm text-muted-foreground">#背景 #チェック</p>
-              </div>
-              <div className="ml-auto">残り4日</div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="grid gap-1">
-                <p className="text-sm font-medium leading-none">
-                  ｢Shut down!｣前面映像提出#1
-                </p>
-                <p className="text-sm text-muted-foreground">#前面 #一次提出</p>
-              </div>
-              <div className="ml-auto">残り4日</div>
             </div>
           </CardContent>
+            ))}
         </Card>
         <Card x-chunk="dashboard-01-chunk-5">
           <CardHeader className="flex flex-row items-center">
