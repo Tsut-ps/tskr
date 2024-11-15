@@ -67,7 +67,14 @@ export default async function Page() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {tasks!.filter((task) => isFutureTask(task.start_date)).length}
+              {
+                tasks!.filter(
+                  (task) =>
+                    // 未完了かつ開始日が未来のタスクの数をカウント
+                    !isCompletedTask(task.status) &&
+                    isFutureTask(task.start_date)
+                ).length
+              }
             </div>
             <p className="text-xs text-muted-foreground">始めよう!</p>
           </CardContent>
@@ -79,7 +86,15 @@ export default async function Page() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {tasks!.filter((task) => !isFutureTask(task.start_date)).length}
+              {
+                tasks!.filter(
+                  (task) =>
+                    // 未完了かつ開始日が過去かつ期限切れでないタスクの数をカウント
+                    !isCompletedTask(task.status) &&
+                    !isFutureTask(task.start_date) &&
+                    !isExpiredTask(task.due_date)
+                ).length
+              }
             </div>
             <p className="text-xs text-muted-foreground">もくもく</p>
           </CardContent>
@@ -91,7 +106,14 @@ export default async function Page() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
-              {tasks!.filter((task) => isExpiredTask(task.due_date)).length}
+              {
+                tasks!.filter(
+                  (task) =>
+                    // 未完了かつ期限切れのタスクの数をカウント
+                    !isCompletedTask(task.status) &&
+                    isExpiredTask(task.due_date)
+                ).length
+              }
             </div>
             <p className="text-xs text-muted-foreground">再調整しよう!</p>
           </CardContent>
@@ -105,7 +127,12 @@ export default async function Page() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {tasks!.filter((task) => isCompletedTask(task.status)).length}
+              {
+                tasks!.filter((task) =>
+                  // 完了したタスクの数をカウント
+                  isCompletedTask(task.status)
+                ).length
+              }
             </div>
             <p className="text-xs text-muted-foreground">やったー!</p>
           </CardContent>
