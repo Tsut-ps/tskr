@@ -6,6 +6,7 @@ import {
   SquarePen,
   TriangleAlert,
 } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +17,43 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function Page() {
+const project_id: string = process.env.NEXT_PUBLIC_PROJECT_ID!;
+
+export default async function Page() {
+  // サーバーがUST使用時も日本時間の日付を取得
+  const jstNowDate = new Date().toLocaleDateString("ja-JP", {
+    timeZone: "Asia/Tokyo",
+  });
+  const nowDate = new Date(jstNowDate);
+
+  const supabase = await createClient();
+
+  const { data: tasks } = await supabase
+    .from("tasks")
+    .select()
+    .eq("project_id", project_id);
+
+  // 開始日が未来のタスクかを判定
+  const isFutureTask = (startDate: string) => {
+    const jstStartDate = new Date(startDate).toLocaleDateString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+    });
+    const start = new Date(jstStartDate);
+    return start.getTime() > nowDate.getTime();
+  };
+
+  // 期限切れのタスクかを判定
+  const isExpiredTask = (dueDate: string) => {
+    const jstDueDate = new Date(dueDate).toLocaleDateString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+    });
+    const due = new Date(jstDueDate);
+    return due.getTime() < nowDate.getTime();
+  };
+
+  // 完了したタスクかを判定
+  const isCompletedTask = (status: string) => status === "completed";
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-6 md:py-8 max-w-screen-xl">
       <h2 className="mt-10 scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
@@ -25,12 +62,14 @@ export default function Page() {
       <div className="grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-4">
         <Card x-chunk="dashboard-01-chunk-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">未完了</CardTitle>
+            <CardTitle className="text-sm font-medium">予定</CardTitle>
             <SquarePen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">なるはやで</p>
+            <div className="text-2xl font-bold">
+              {tasks!.filter((task) => isFutureTask(task.start_date)).length}
+            </div>
+            <p className="text-xs text-muted-foreground">始めよう!</p>
           </CardContent>
         </Card>
         <Card x-chunk="dashboard-01-chunk-1">
@@ -39,7 +78,9 @@ export default function Page() {
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">6</div>
+            <div className="text-2xl font-bold">
+              {tasks!.filter((task) => !isFutureTask(task.start_date)).length}
+            </div>
             <p className="text-xs text-muted-foreground">もくもく</p>
           </CardContent>
         </Card>
@@ -49,7 +90,9 @@ export default function Page() {
             <TriangleAlert className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">1</div>
+            <div className="text-2xl font-bold text-red-600">
+              {tasks!.filter((task) => isExpiredTask(task.due_date)).length}
+            </div>
             <p className="text-xs text-muted-foreground">再調整しよう!</p>
           </CardContent>
         </Card>
@@ -61,7 +104,9 @@ export default function Page() {
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">32</div>
+            <div className="text-2xl font-bold text-green-600">
+              {tasks!.filter((task) => isCompletedTask(task.status)).length}
+            </div>
             <p className="text-xs text-muted-foreground">やったー!</p>
           </CardContent>
         </Card>
