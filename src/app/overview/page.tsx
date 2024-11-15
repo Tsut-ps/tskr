@@ -1,4 +1,5 @@
 import Link from "next/link";
+import clsx from "clsx";
 import {
   Activity,
   ArrowUpRight,
@@ -16,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 const project_id: string = process.env.NEXT_PUBLIC_PROJECT_ID!;
 
@@ -30,7 +32,7 @@ export default async function Page() {
 
   const { data: tasks } = await supabase
     .from("tasks")
-    .select()
+    .select("*, tags(*), teams(name)")
     .eq("project_id", project_id);
 
   // 開始日が未来のタスクかを判定
@@ -53,6 +55,23 @@ export default async function Page() {
 
   // 完了したタスクかを判定
   const isCompletedTask = (status: string) => status === "completed";
+
+  const calcDaysLeft = (dueDate: string) => {
+    // サーバーがUST使用時も日本時間の日付で計算
+    const jstDueDate = new Date(dueDate).toLocaleDateString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+    });
+    const due = new Date(jstDueDate);
+    const diffTime = due.getTime() - nowDate.getTime(); // 差分時間(ミリ秒)
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const getDateColor = (dueDate: string) => {
+    const daysLeft = calcDaysLeft(dueDate);
+    if (daysLeft <= 0) return "text-red-500";
+    if (daysLeft <= 7) return "text-yellow-500";
+    return "";
+  };
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-6 md:py-8 max-w-screen-xl">
