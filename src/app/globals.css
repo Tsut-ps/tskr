@@ -12,6 +12,10 @@ body {
   background: var(--background);
 }
 
+p::first-letter {
+  font-feature-settings: "palt"
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
