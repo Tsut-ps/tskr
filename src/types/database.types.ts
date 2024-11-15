@@ -123,6 +123,7 @@ export type Database = {
           due_date: string
           id: string
           project_id: string
+          start_date: string
           status: string
           team_id: string
           title: string
@@ -134,6 +135,7 @@ export type Database = {
           due_date: string
           id?: string
           project_id: string
+          start_date: string
           status?: string
           team_id: string
           title: string
@@ -145,6 +147,7 @@ export type Database = {
           due_date?: string
           id?: string
           project_id?: string
+          start_date?: string
           status?: string
           team_id?: string
           title?: string
@@ -240,21 +243,21 @@ export type Database = {
           created_at: string
           id: string
           name: string
-          project_id: string | null
+          project_id: string
           updated_at: string
         }
         Insert: {
           created_at?: string
           id?: string
           name: string
-          project_id?: string | null
+          project_id: string
           updated_at?: string
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
-          project_id?: string | null
+          project_id?: string
           updated_at?: string
         }
         Relationships: [
