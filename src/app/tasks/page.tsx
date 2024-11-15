@@ -15,12 +15,14 @@ import { Badge } from "@/components/ui/badge";
 const project_id: string = process.env.NEXT_PUBLIC_PROJECT_ID!;
 
 export default async function Page() {
-  // UST使用時も日本時間の日付を取得
-  const jstDate = new Date().toLocaleString("ja-JP", {
+  // サーバーがUST使用時も日本時間の日付を取得
+  const jstNowDate = new Date().toLocaleDateString("ja-JP", {
     timeZone: "Asia/Tokyo",
   });
-  const nowDate = new Date(jstDate);
-  console.log(nowDate, nowDate.getDate());
+  const nowDate = new Date(jstNowDate);
+  
+  // 地方時に基づく月日の確認
+  console.log(nowDate, nowDate.getMonth() + 1 + "月", nowDate.getDate() + "日");
 
   const supabase = await createClient();
 
@@ -37,16 +39,20 @@ export default async function Page() {
     )
     .eq("project_id", project_id);
 
-  const getDueDay = (dueDate: string) => {
-    const date = new Date(dueDate).getDate();
-    const due = date - nowDate.getDate();
-    return Math.floor(due);
+  const calcDaysLeft = (dueDate: string) => {
+    // サーバーがUST使用時も日本時間の日付で計算
+    const jstDueDate = new Date(dueDate).toLocaleDateString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+    });
+    const due = new Date(jstDueDate);
+    const diffTime = due.getTime() - nowDate.getTime(); // 差分時間(ミリ秒)
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
   const getDateColor = (dueDate: string) => {
-    const dueDay = getDueDay(dueDate);
-    if (dueDay <= 0) return "text-red-500";
-    if (dueDay <= 7) return "text-yellow-500";
+    const daysLeft = calcDaysLeft(dueDate);
+    if (daysLeft <= 0) return "text-red-500";
+    if (daysLeft <= 7) return "text-yellow-500";
     return "";
   };
 
@@ -72,10 +78,13 @@ export default async function Page() {
                 <CardContent className="p-5">
                   <div className="flex items-center gap-4">
                     <div className="grid gap-2">
-                      <p className="text-sm font-medium leading-none py-1">
+                      <p className="text-sm font-medium leading-none pt-1">
                         {task.title}
                       </p>
-                      <div className="flex flex-wrap gap-1">
+                      <p className="text-sm text-muted-foreground">
+                        {task.start_date}→{task.due_date}
+                      </p>
+                      <div className="flex flex-wrap gap-1 pt-1">
                         {task.tags?.map((tag, index) => (
                           <Badge key={index} variant="secondary">
                             {tag.name}
@@ -87,7 +96,7 @@ export default async function Page() {
                       <div
                         className={clsx("ml-auto", getDateColor(task.due_date))}
                       >
-                        残り{getDueDay(task.due_date)}日
+                        残り{calcDaysLeft(task.due_date)}日
                       </div>
                     }
                   </div>
