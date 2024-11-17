@@ -64,7 +64,12 @@ export default async function Page() {
                       <div
                         className={clsx("ml-auto", getDateColor(task.due_date))}
                       >
-                        残り{calcDaysLeft(task.due_date)}日
+                        {
+                          // 残り日数が0日未満の場合は「(期限切れ)」と表示
+                          calcDaysLeft(task.due_date) < 0
+                            ? "(期限切れ)"
+                            : `残り${calcDaysLeft(task.due_date)}日`
+                        }
                       </div>
                     }
                   </div>
