@@ -1,6 +1,7 @@
 import Link from "next/link";
 import clsx from "clsx";
 import { createClient } from "@/utils/supabase/server";
+import { calcDaysLeft, getDateColor } from "@/utils/date";
 
 import {
   Card,
@@ -15,46 +16,13 @@ import { Badge } from "@/components/ui/badge";
 const project_id: string = process.env.NEXT_PUBLIC_PROJECT_ID!;
 
 export default async function Page() {
-  // サーバーがUST使用時も日本時間の日付を取得
-  const jstNowDate = new Date().toLocaleDateString("ja-JP", {
-    timeZone: "Asia/Tokyo",
-  });
-  const nowDate = new Date(jstNowDate);
-  
-  // 地方時に基づく月日の確認
-  console.log(nowDate, nowDate.getMonth() + 1 + "月", nowDate.getDate() + "日");
-
   const supabase = await createClient();
 
   // 外部キーに基づく関係の自動検出
   const { data: teams } = await supabase
     .from("teams")
-    .select(
-      `
-      *,
-      tasks(*, 
-        tags(*)
-      )
-    `
-    )
+    .select("*, tasks(*, tags(*))")
     .eq("project_id", project_id);
-
-  const calcDaysLeft = (dueDate: string) => {
-    // サーバーがUST使用時も日本時間の日付で計算
-    const jstDueDate = new Date(dueDate).toLocaleDateString("ja-JP", {
-      timeZone: "Asia/Tokyo",
-    });
-    const due = new Date(jstDueDate);
-    const diffTime = due.getTime() - nowDate.getTime(); // 差分時間(ミリ秒)
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  };
-
-  const getDateColor = (dueDate: string) => {
-    const daysLeft = calcDaysLeft(dueDate);
-    if (daysLeft <= 0) return "text-red-500";
-    if (daysLeft <= 7) return "text-yellow-500";
-    return "";
-  };
 
   return (
     <main className="flex gap-4 p-4 md:gap-6 md:py-8 overflow-x-auto w-full scrollbar-hide">

@@ -8,6 +8,13 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
+import {
+  isFutureTask,
+  isExpiredTask,
+  isCompletedTask,
+  calcDaysLeft,
+  getDateColor,
+} from "@/utils/date";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -22,56 +29,12 @@ import { Separator } from "@/components/ui/separator";
 const project_id: string = process.env.NEXT_PUBLIC_PROJECT_ID!;
 
 export default async function Page() {
-  // サーバーがUST使用時も日本時間の日付を取得
-  const jstNowDate = new Date().toLocaleDateString("ja-JP", {
-    timeZone: "Asia/Tokyo",
-  });
-  const nowDate = new Date(jstNowDate);
-
   const supabase = await createClient();
 
   const { data: tasks } = await supabase
     .from("tasks")
     .select("*, tags(*), teams(name)")
     .eq("project_id", project_id);
-
-  // 開始日が未来のタスクかを判定
-  const isFutureTask = (startDate: string) => {
-    const jstStartDate = new Date(startDate).toLocaleDateString("ja-JP", {
-      timeZone: "Asia/Tokyo",
-    });
-    const start = new Date(jstStartDate);
-    return start.getTime() > nowDate.getTime();
-  };
-
-  // 期限切れのタスクかを判定
-  const isExpiredTask = (dueDate: string) => {
-    const jstDueDate = new Date(dueDate).toLocaleDateString("ja-JP", {
-      timeZone: "Asia/Tokyo",
-    });
-    const due = new Date(jstDueDate);
-    return due.getTime() < nowDate.getTime();
-  };
-
-  // 完了したタスクかを判定
-  const isCompletedTask = (status: string) => status === "completed";
-
-  const calcDaysLeft = (dueDate: string) => {
-    // サーバーがUST使用時も日本時間の日付で計算
-    const jstDueDate = new Date(dueDate).toLocaleDateString("ja-JP", {
-      timeZone: "Asia/Tokyo",
-    });
-    const due = new Date(jstDueDate);
-    const diffTime = due.getTime() - nowDate.getTime(); // 差分時間(ミリ秒)
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  };
-
-  const getDateColor = (dueDate: string) => {
-    const daysLeft = calcDaysLeft(dueDate);
-    if (daysLeft <= 0) return "text-red-500";
-    if (daysLeft <= 7) return "text-yellow-500";
-    return "";
-  };
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-6 md:py-8 max-w-screen-xl">
