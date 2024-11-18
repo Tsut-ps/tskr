@@ -26,15 +26,17 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-const project_id: string = process.env.NEXT_PUBLIC_PROJECT_ID!;
-
-export default async function Page() {
+export default async function Page({
+  params,
+}: {
+  params: { projectId: string };
+}) {
   const supabase = await createClient();
 
   const { data: tasks } = await supabase
     .from("tasks")
     .select("*, tags(*), teams(name)")
-    .eq("project_id", project_id);
+    .eq("project_id", params.projectId);
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-6 md:py-8 max-w-screen-xl">
