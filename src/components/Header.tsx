@@ -12,20 +12,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { NavigationTabs } from "@/components/ui/tabs-navigation";
 import { Combobox } from "@/components/Combobox";
-import { ClientNavLink } from "@/components/ClientNavLink";
+import { ClientTabNavLink, ClientNavLink } from "@/components/ClientNavLink";
 
 type NavItem = {
-  href: string;
+  link: string;
   label: string;
 };
 
 const navItems: NavItem[] = [
-  { href: "/overview", label: "全体" },
-  { href: "/tasks", label: "タスク" },
-  { href: "/charts", label: "チャート" },
-  { href: "/settings", label: "設定" },
+  { link: "", label: "全体" },
+  { link: "/tasks", label: "タスク" },
+  { link: "/charts", label: "チャート" },
+  { link: "/settings", label: "設定" },
 ];
 
 export function Header() {
@@ -40,7 +39,7 @@ export function Header() {
       </Link>
       <Combobox />
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-        <NavigationTabs items={navItems} />
+        <ClientTabNavLink items={navItems} />
       </nav>
       <Sheet>
         <SheetTrigger asChild>
@@ -58,9 +57,7 @@ export function Header() {
               <Package2 className="h-6 w-6" />
               <span className="sr-only">tskr</span>
             </Link>
-            {navItems.map((item) => (
-              <ClientNavLink key={item.href} {...item} />
-            ))}
+            <ClientNavLink items={navItems} />
           </nav>
         </SheetContent>
       </Sheet>
