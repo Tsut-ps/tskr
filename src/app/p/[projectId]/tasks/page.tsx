@@ -1,5 +1,5 @@
 import Link from "next/link";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/server";
 import { calcDaysLeft, getDateColor } from "@/utils/date";
 
@@ -64,7 +64,7 @@ export default async function Page({
                     </div>
                     {
                       <div
-                        className={clsx("ml-auto", getDateColor(task.due_date))}
+                        className={cn("ml-auto", getDateColor(task.due_date))}
                       >
                         {
                           // 残り日数が0日未満の場合は「(期限切れ)」と表示

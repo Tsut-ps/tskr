@@ -1,5 +1,5 @@
 import Link from "next/link";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import {
   Activity,
   ArrowUpRight,
@@ -174,7 +174,7 @@ export default async function Page({
                       <p>{task.tags?.map((tag) => `#${tag.name} `)}</p>
                     </div>
                   </div>
-                  <div className={clsx("ml-auto", getDateColor(task.due_date))}>
+                  <div className={cn("ml-auto", getDateColor(task.due_date))}>
                     {
                       // 残り日数が0日未満の場合は「(期限切れ)」と表示
                       calcDaysLeft(task.due_date) < 0
@@ -224,7 +224,7 @@ export default async function Page({
                       <p>{task.tags?.map((tag) => `#${tag.name} `)}</p>
                     </div>
                   </div>
-                  <div className={clsx("ml-auto", getDateColor(task.due_date))}>
+                  <div className={cn("ml-auto", getDateColor(task.due_date))}>
                     {
                       // 残り日数が0日未満の場合は「(期限切れ)」と表示
                       calcDaysLeft(task.due_date) < 0
