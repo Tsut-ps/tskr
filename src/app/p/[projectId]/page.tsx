@@ -33,6 +33,7 @@ export default async function Page({
 }) {
   const supabase = await createClient();
 
+  // 外部キーに基づく関係の自動検出
   const { data: tasks } = await supabase
     .from("tasks")
     .select("*, tags(*), teams(name)")

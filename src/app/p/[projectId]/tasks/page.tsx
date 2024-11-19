@@ -13,16 +13,18 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-const project_id: string = process.env.NEXT_PUBLIC_PROJECT_ID!;
-
-export default async function Page() {
+export default async function Page({
+  params,
+}: {
+  params: { projectId: string };
+}) {
   const supabase = await createClient();
 
   // 外部キーに基づく関係の自動検出
   const { data: teams } = await supabase
     .from("teams")
     .select("*, tasks(*, tags(*))")
-    .eq("project_id", project_id);
+    .eq("project_id", params.projectId);
 
   return (
     <main className="flex gap-4 p-4 md:gap-6 md:py-8 overflow-x-auto w-full scrollbar-hide">
