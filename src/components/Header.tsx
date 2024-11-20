@@ -11,7 +11,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { ProjectCombobox } from "@/components/ProjectCombobox";
 import { ClientTabNavLink, ClientNavLink } from "@/components/ClientNavLink";
 
@@ -49,14 +56,16 @@ export function Header() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left">
-          <nav className="grid gap-6 text-lg font-medium">
-            <Link
-              href="#"
-              className="flex items-center gap-2 text-lg font-semibold"
-            >
+          <SheetHeader>
+            <SheetTitle className="flex items-center gap-2 text-lg font-semibold">
               <Package2 className="h-6 w-6" />
-              <span className="sr-only">tskr</span>
-            </Link>
+              tskr
+            </SheetTitle>
+            <SheetDescription className="sr-only">
+              プロジェクト内メニュー
+            </SheetDescription>
+          </SheetHeader>
+          <nav className="grid mt-6 gap-6 text-lg font-medium">
             <ClientNavLink items={navItems} />
           </nav>
         </SheetContent>
