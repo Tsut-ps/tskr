@@ -1,8 +1,10 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -13,6 +15,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -25,24 +28,54 @@ type StoreProject = {
   name: string;
 };
 
-const storeProjects: StoreProject[] = [
+// プロジェクトの履歴を保存するアトム (アクセス履歴)
+const recentProjectsAtom = atomWithStorage<StoreProject[]>(
+  "project",
+  [],
+  undefined,
   {
-    slug: "00000000-0000-0000-0000-000000000000",
-    name: "(dummy)",
-  },
-];
+    getOnInit: true,
+  }
+);
 
 export function ProjectCombobox() {
-  const { projectSlug } = useParams();
   const router = useRouter();
+  const projectSlug = useParams().projectSlug as string;
+
+  const [recentProjects, setRecentProjects] = useAtom(recentProjectsAtom);
+  const [selectedSlug, setSelectedSlug] = useState("");
   const [open, setOpen] = useState(false);
-  const [selectedSlug, setSelectedSlug] = useState(projectSlug);
+
+  // ハイドレーションエラー対策
+  useEffect(() => {
+    if (!projectSlug) return;
+    setSelectedSlug(projectSlug);
+  }, [projectSlug]);
+
+  // プロジェクト履歴に追加
+  useEffect(() => {
+    if (!projectSlug) return;
+
+    setRecentProjects((prev) => {
+      // すでに追加済みの場合は何もしない
+      if (prev.some((p) => p.slug === projectSlug)) return prev;
+      return [
+        ...prev,
+        {
+          slug: projectSlug,
+          name: `(プロジェクト ${prev.length})`,
+        },
+      ];
+    });
+  }, [projectSlug, setRecentProjects]);
 
   // 選択中のプロジェクトを取得 (遷移時に再取得しない)
   const selectedProject = useMemo(
     () =>
-      storeProjects.find((storeProject) => storeProject.slug === selectedSlug),
-    [selectedSlug]
+      recentProjects.find(
+        (recentProject) => recentProject.slug === selectedSlug
+      ),
+    [recentProjects, selectedSlug]
   );
 
   return (
@@ -55,7 +88,9 @@ export function ProjectCombobox() {
             aria-expanded={open}
             className="md:w-[180px] lg:w-[240px] justify-between"
           >
-            {selectedProject?.name ?? "プロジェクトを選択"}
+            <span className="truncate">
+              {selectedProject?.name ?? "プロジェクトを選択"}
+            </span>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -65,7 +100,7 @@ export function ProjectCombobox() {
             <CommandList>
               <CommandEmpty>プロジェクトが見つかりません。</CommandEmpty>
               <CommandGroup heading="アクセス履歴一覧">
-                {storeProjects.map((project) => (
+                {recentProjects.map((project) => (
                   <CommandItem
                     key={project.slug}
                     value={project.name}
@@ -83,10 +118,11 @@ export function ProjectCombobox() {
                           : "opacity-0"
                       )}
                     />
-                    {project.name}
+                    <span className="truncate">{project.name}</span>
                   </CommandItem>
                 ))}
               </CommandGroup>
+              <CommandSeparator />
               <CommandGroup heading="新規">
                 <CommandItem
                   value="新しいプロジェクトを作成"

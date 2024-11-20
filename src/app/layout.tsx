@@ -4,6 +4,7 @@ import clsx from "clsx";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
+import { Providers } from "../components/providers";
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -37,11 +38,13 @@ export default function RootLayout({
       className={clsx(inter.variable, notoSansJP.variable, "font-sans")}
     >
       <body className="antialiased flex min-h-screen w-full flex-col">
-        <NextTopLoader showSpinner={false} />
-        <Header />
-        <div className="flex justify-center">{children}</div>
-        <Footer />
-        <Toaster />
+        <Providers>
+          <NextTopLoader showSpinner={false} />
+          <Header />
+          <div className="flex justify-center">{children}</div>
+          <Footer />
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );
