@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/server";
 import { calcDaysLeft, getDateColor } from "@/utils/date";
@@ -16,19 +17,28 @@ import { Badge } from "@/components/ui/badge";
 export default async function Page({
   params,
 }: {
-  params: { projectId: string };
+  params: { projectSlug: string };
 }) {
   const supabase = await createClient();
+  const slug = params.projectSlug;
 
   // 外部キーに基づく関係の自動検出
-  const { data: teams } = await supabase
-    .from("teams")
-    .select("*, tasks(*, tags(*))")
-    .eq("project_id", params.projectId);
+  const { data: project } = await supabase
+    .from("projects")
+    .select(
+      `name, 
+        teams(name, 
+          tasks(title, start_date, due_date, 
+            tags(name)))`
+    )
+    .eq("slug", slug)
+    .single();
+
+  if (!project) notFound();
 
   return (
     <main className="flex gap-4 p-4 md:gap-6 md:py-8 overflow-x-auto w-full scrollbar-hide">
-      {teams?.map((team, index) => (
+      {project.teams?.map((team, index) => (
         <div key={index} className="w-96 flex-none">
           <div className="flex flex-row items-center p-3">
             <div className="grid gap-1">

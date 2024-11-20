@@ -9,11 +9,12 @@ export default function Layout({
   params,
 }: {
   children: React.ReactNode;
-  params: { projectId: string };
+  params: { projectSlug: string };
 }) {
-  const uuid = params.projectId;
+  const uuid = params.projectSlug;
 
   if (!uuidRegex.test(uuid)) {
+    console.log("Invalid UUID");
     notFound();
   }
 

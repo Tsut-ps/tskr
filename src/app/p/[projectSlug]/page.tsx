@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   Activity,
@@ -29,15 +30,24 @@ import { Separator } from "@/components/ui/separator";
 export default async function Page({
   params,
 }: {
-  params: { projectId: string };
+  params: { projectSlug: string };
 }) {
   const supabase = await createClient();
+  const slug = params.projectSlug;
 
   // 外部キーに基づく関係の自動検出
-  const { data: tasks } = await supabase
-    .from("tasks")
-    .select("*, tags(*), teams(name)")
-    .eq("project_id", params.projectId);
+  const { data: project } = await supabase
+    .from("projects")
+    .select(
+      `name, 
+        tasks(title, status, start_date, due_date, 
+          tags(name), 
+          teams(name))`
+    )
+    .eq("slug", slug)
+    .single();
+
+  if (!project) notFound();
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-6 md:py-8 max-w-screen-xl">
@@ -53,7 +63,7 @@ export default async function Page({
           <CardContent>
             <div className="text-2xl font-bold">
               {
-                tasks!.filter(
+                project.tasks!.filter(
                   (task) =>
                     // 未完了かつ開始日が未来のタスクの数をカウント
                     !isCompletedTask(task.status) &&
@@ -72,7 +82,7 @@ export default async function Page({
           <CardContent>
             <div className="text-2xl font-bold">
               {
-                tasks!.filter(
+                project.tasks!.filter(
                   (task) =>
                     // 未完了かつ開始日が過去かつ期限切れでないタスクの数をカウント
                     !isCompletedTask(task.status) &&
@@ -92,7 +102,7 @@ export default async function Page({
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
               {
-                tasks!.filter(
+                project.tasks!.filter(
                   (task) =>
                     // 未完了かつ期限切れのタスクの数をカウント
                     !isCompletedTask(task.status) &&
@@ -113,7 +123,7 @@ export default async function Page({
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
               {
-                tasks!.filter((task) =>
+                project.tasks!.filter((task) =>
                   // 完了したタスクの数をカウント
                   isCompletedTask(task.status)
                 ).length
@@ -133,7 +143,7 @@ export default async function Page({
               <CardDescription>
                 1週間以内
                 {
-                  tasks!.filter(
+                  project.tasks!.filter(
                     (task) =>
                       // 未完了かつ残り日数が7日以内のタスクの数をカウント
                       !isCompletedTask(task.status) &&
@@ -150,8 +160,8 @@ export default async function Page({
               </Link>
             </Button>
           </CardHeader>
-          {tasks!
-            .filter(
+          {project
+            .tasks!.filter(
               (task) =>
                 // 未完了かつ残り日数が7日以内のタスクの数をカウント
                 !isCompletedTask(task.status) &&
@@ -201,8 +211,8 @@ export default async function Page({
               </Link>
             </Button>
           </CardHeader>
-          {tasks!
-            .filter(
+          {project
+            .tasks!.filter(
               (task) =>
                 // 関係あるタスクの絞り込み
                 task.teams?.name === "音源班"
