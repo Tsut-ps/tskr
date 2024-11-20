@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Combobox } from "@/components/Combobox";
+import { ProjectCombobox } from "@/components/ProjectCombobox";
 import { ClientTabNavLink, ClientNavLink } from "@/components/ClientNavLink";
 
 type NavItem = {
@@ -37,7 +37,7 @@ export function Header() {
         <Package2 className="h-6 w-6" />
         <span className="sr-only">tskr</span>
       </Link>
-      <Combobox />
+      <ProjectCombobox />
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <ClientTabNavLink items={navItems} />
       </nav>

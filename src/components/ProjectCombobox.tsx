@@ -32,7 +32,7 @@ const storeProjects: StoreProject[] = [
   },
 ];
 
-export function Combobox() {
+export function ProjectCombobox() {
   const { projectSlug } = useParams();
   const router = useRouter();
   const [open, setOpen] = useState(false);
