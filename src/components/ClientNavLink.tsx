@@ -15,10 +15,10 @@ const prefix = "/p/";
 
 // PC版のナビゲーション
 export function ClientTabNavLink({ items }: NavLinkProps) {
-  const { projectId } = useParams();
+  const { projectSlug } = useParams();
 
   const navItems = items.map((item) => ({
-    href: `${prefix}${projectId}${item.link}`,
+    href: `${prefix}${projectSlug}${item.link}`,
     label: item.label,
   }));
 
@@ -27,13 +27,13 @@ export function ClientTabNavLink({ items }: NavLinkProps) {
 
 // モバイル版のナビゲーション
 export function ClientNavLink({ items }: NavLinkProps) {
-  const { projectId } = useParams();
+  const { projectSlug } = useParams();
   const pathname = usePathname();
 
   return (
     <>
       {items.map((item) => {
-        const href = `${prefix}${projectId}${item.link}`;
+        const href = `${prefix}${projectSlug}${item.link}`;
         const isActive = pathname === href;
 
         return (
