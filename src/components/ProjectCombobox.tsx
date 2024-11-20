@@ -7,6 +7,7 @@ import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
 import { cn } from "@/lib/utils";
+import { getProjectName } from "./actions";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -54,19 +55,28 @@ export function ProjectCombobox() {
 
   // プロジェクト履歴に追加
   useEffect(() => {
+    // プロジェクトのSlugがない場合は何もしない (レンダリング中は取得できない)
     if (!projectSlug) return;
 
-    setRecentProjects((prev) => {
-      // すでに追加済みの場合は何もしない
-      if (prev.some((p) => p.slug === projectSlug)) return prev;
-      return [
-        ...prev,
-        {
-          slug: projectSlug,
-          name: `(プロジェクト ${prev.length})`,
-        },
-      ];
-    });
+    const fetchProjectName = async () => {
+      const projectName = await getProjectName(projectSlug);
+      // プロジェクト名が取得できない場合は追加しない
+      if (!projectName) return;
+
+      setRecentProjects((prev) => {
+        // すでに追加済みの場合はプロジェクト名のみ更新
+        if (prev.some((project) => project.slug === projectSlug)) {
+          return prev.map((project) =>
+            project.slug === projectSlug
+              ? { slug: projectSlug, name: projectName }
+              : project
+          );
+        }
+        // それ以外は新規追加
+        return [...prev, { slug: projectSlug, name: projectName }];
+      });
+    };
+    fetchProjectName();
   }, [projectSlug, setRecentProjects]);
 
   // 選択中のプロジェクトを取得 (遷移時に再取得しない)
