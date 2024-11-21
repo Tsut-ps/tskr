@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP, Inter } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import clsx from "clsx";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
@@ -45,6 +46,7 @@ export default function RootLayout({
           <Footer />
           <Toaster />
         </Providers>
+        <SpeedInsights />
       </body>
     </html>
   );
