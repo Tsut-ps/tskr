@@ -61,7 +61,7 @@ export default async function Page({
             <SquarePen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <span className="text-2xl font-bold">
               {
                 project.tasks!.filter(
                   (task) =>
@@ -70,7 +70,7 @@ export default async function Page({
                     isFutureTask(task.start_date)
                 ).length
               }
-            </div>
+            </span>
             <p className="text-xs text-muted-foreground">始めよう!</p>
           </CardContent>
         </Card>
@@ -80,7 +80,7 @@ export default async function Page({
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <span className="text-2xl font-bold">
               {
                 project.tasks!.filter(
                   (task) =>
@@ -90,7 +90,7 @@ export default async function Page({
                     !isExpiredTask(task.due_date)
                 ).length
               }
-            </div>
+            </span>
             <p className="text-xs text-muted-foreground">もくもく</p>
           </CardContent>
         </Card>
@@ -100,7 +100,7 @@ export default async function Page({
             <TriangleAlert className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">
+            <span className="text-2xl font-bold text-red-600">
               {
                 project.tasks!.filter(
                   (task) =>
@@ -109,7 +109,7 @@ export default async function Page({
                     isExpiredTask(task.due_date)
                 ).length
               }
-            </div>
+            </span>
             <p className="text-xs text-muted-foreground">再調整しよう!</p>
           </CardContent>
         </Card>
@@ -121,14 +121,18 @@ export default async function Page({
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">
+            <span className="text-2xl font-bold text-green-600">
               {
                 project.tasks!.filter((task) =>
                   // 完了したタスクの数をカウント
                   isCompletedTask(task.status)
                 ).length
               }
-            </div>
+            </span>
+            <span className="text-muted-foreground">
+              <span className="mx-1.5">/</span>
+              {project.tasks!.length}
+            </span>
             <p className="text-xs text-muted-foreground">やったー!</p>
           </CardContent>
         </Card>
