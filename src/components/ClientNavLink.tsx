@@ -17,18 +17,23 @@ const prefix = "/p/";
 export function ClientTabNavLink({ items }: NavLinkProps) {
   const { projectSlug } = useParams();
 
+  // 4つ目のスラッシュより前のパスを取得
+  const pathname = usePathname().split("/").slice(0, 4).join("/");
+
   const navItems = items.map((item) => ({
     href: `${prefix}${projectSlug}${item.link}`,
     label: item.label,
   }));
 
-  return <NavigationTabs items={navItems} />;
+  return <NavigationTabs items={navItems} optionalPathname={pathname} />;
 }
 
 // モバイル版のナビゲーション
 export function ClientNavLink({ items }: NavLinkProps) {
   const { projectSlug } = useParams();
-  const pathname = usePathname();
+
+  // 4つ目のスラッシュより前のパスを取得
+  const pathname = usePathname().split("/").slice(0, 4).join("/");
 
   return (
     <>

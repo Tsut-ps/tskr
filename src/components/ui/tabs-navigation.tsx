@@ -12,9 +12,13 @@ type NavItem = {
 
 interface NavigationTabsProps {
   items: NavItem[];
+  optionalPathname?: string;
 }
 
-const NavigationTabs: React.FC<NavigationTabsProps> = ({ items }) => {
+const NavigationTabs: React.FC<NavigationTabsProps> = ({
+  items,
+  optionalPathname,
+}) => {
   const pathname = usePathname();
 
   return (
@@ -24,7 +28,8 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({ items }) => {
       )}
     >
       {items.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive = (optionalPathname ?? pathname) === item.href;
+
         return (
           <Link
             key={item.href}
