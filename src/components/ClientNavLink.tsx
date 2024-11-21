@@ -10,9 +10,6 @@ interface NavLinkProps {
   items: { link: string; label: string }[];
 }
 
-// プロジェクトIDの前に付与するパス
-const prefix = "/p/";
-
 // PC版のナビゲーション
 export function ClientTabNavLink({ items }: NavLinkProps) {
   const { projectSlug } = useParams();
@@ -21,7 +18,7 @@ export function ClientTabNavLink({ items }: NavLinkProps) {
   const pathname = usePathname().split("/").slice(0, 4).join("/");
 
   const navItems = items.map((item) => ({
-    href: `${prefix}${projectSlug}${item.link}`,
+    href: `/${projectSlug}${item.link}`,
     label: item.label,
   }));
 
@@ -38,7 +35,7 @@ export function ClientNavLink({ items }: NavLinkProps) {
   return (
     <>
       {items.map((item) => {
-        const href = `${prefix}${projectSlug}${item.link}`;
+        const href = `/${projectSlug}${item.link}`;
         const isActive = pathname === href;
 
         return (

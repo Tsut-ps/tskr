@@ -32,7 +32,7 @@ export default function SettingsLayout({
   // プロジェクト固有のリンクに変換 (設定はプロジェクトごとにある)
   const sidebarNavItems = sidebarDefaultNavItems.map((item) => ({
     ...item,
-    href: `/p/${projectSlug}${item.href}`,
+    href: `/${projectSlug}${item.href}`,
   }));
 
   return (

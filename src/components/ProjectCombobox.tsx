@@ -89,7 +89,7 @@ export function ProjectCombobox() {
   );
 
   return (
-    <div className="hidden md:flex">
+    <div className="md:flex">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -117,7 +117,7 @@ export function ProjectCombobox() {
                     onSelect={() => {
                       setSelectedSlug(project.slug);
                       setOpen(false);
-                      router.push(`/p/${project.slug}`);
+                      router.push(`/${project.slug}`);
                     }}
                   >
                     <Check

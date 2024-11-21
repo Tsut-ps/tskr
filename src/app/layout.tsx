@@ -7,8 +7,6 @@ import "./globals.css";
 
 import { Providers } from "../components/providers";
 import { Toaster } from "@/components/ui/toaster";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "tskr",
@@ -41,9 +39,7 @@ export default function RootLayout({
       <body className="antialiased flex min-h-screen w-full flex-col">
         <Providers>
           <NextTopLoader showSpinner={false} />
-          <Header />
-          <div className="flex justify-center">{children}</div>
-          <Footer />
+          {children}
           <Toaster />
         </Providers>
         <SpeedInsights />
