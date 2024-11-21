@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarNav } from "./sidebar-nav";
 
-const sidebarNavItems = [
+const sidebarDefaultNavItems = [
   {
     title: "プロフィール",
     href: "/settings",
@@ -22,9 +22,19 @@ const sidebarNavItems = [
 
 export default function SettingsLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { projectSlug: string };
 }) {
+  const projectSlug = params.projectSlug as string;
+
+  // プロジェクト固有のリンクに変換 (設定はプロジェクトごとにある)
+  const sidebarNavItems = sidebarDefaultNavItems.map((item) => ({
+    ...item,
+    href: `/p/${projectSlug}${item.href}`,
+  }));
+
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-6 md:py-8 w-full max-w-screen-xl">
       <div className="space-y-6">
