@@ -54,7 +54,11 @@ export default async function Page({
           </div>
           <div className="grid gap-2">
             {team.tasks?.map((task, index) => (
-              <Link key={index} href={`/${projectSlug}/tasks/${task.id}`}>
+              <Link
+                key={index}
+                href={`/${projectSlug}/tasks/${task.id}`}
+                scroll={false}
+              >
                 <Card key={index}>
                   <CardContent className="p-5">
                     <div className="flex items-center gap-4">
