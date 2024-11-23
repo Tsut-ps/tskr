@@ -14,7 +14,19 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
-export function Modal({ children }: { children: React.ReactNode }) {
+export function Modal({
+  children,
+  TaskTitle,
+  createdTime,
+  updatedTime,
+  isSameDate,
+}: {
+  children: React.ReactNode;
+  TaskTitle: string;
+  createdTime: string;
+  updatedTime: string;
+  isSameDate: boolean;
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -26,15 +38,20 @@ export function Modal({ children }: { children: React.ReactNode }) {
 
   return (
     <Sheet open={open} onOpenChange={onDismiss}>
-      <SheetContent side={isDesktop ? "right" : "bottom"}>
+      <SheetContent
+        className="md:!max-w-[600px]"
+        side={isDesktop ? "right" : "bottom"}
+      >
         <SheetHeader>
-          <SheetTitle>タスクを編集</SheetTitle>
-          <SheetDescription asChild>
-            プロジェクトのタスクを編集
+          <SheetTitle>{TaskTitle}</SheetTitle>
+          <SheetDescription>
+            {isSameDate
+              ? `作成日時: ${createdTime}`
+              : `更新日時: ${updatedTime}`}
           </SheetDescription>
-          <Separator className="!my-4" />
-          {children}
         </SheetHeader>
+        <Separator className="!my-4" />
+        {children}
       </SheetContent>
     </Sheet>
   );
