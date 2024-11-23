@@ -9,9 +9,11 @@ const uuidRegex =
 
 export default function Layout({
   children,
+  modal,
   params,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
   params: { projectSlug: string };
 }) {
   const uuid = params.projectSlug;
@@ -25,6 +27,7 @@ export default function Layout({
     <>
       <Header isProejctPage />
       <div className="flex justify-center">{children}</div>
+      <div className="flex justify-center">{modal}</div>
       <Footer />
     </>
   );
