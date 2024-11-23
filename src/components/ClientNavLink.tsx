@@ -14,8 +14,8 @@ interface NavLinkProps {
 export function ClientTabNavLink({ items }: NavLinkProps) {
   const { projectSlug } = useParams();
 
-  // 4つ目のスラッシュより前のパスを取得
-  const pathname = usePathname().split("/").slice(0, 4).join("/");
+  // 3つ目のスラッシュより前のパスを取得
+  const pathname = usePathname().split("/").slice(0, 3).join("/");
 
   const navItems = items.map((item) => ({
     href: `/${projectSlug}${item.link}`,
@@ -29,8 +29,8 @@ export function ClientTabNavLink({ items }: NavLinkProps) {
 export function ClientNavLink({ items }: NavLinkProps) {
   const { projectSlug } = useParams();
 
-  // 4つ目のスラッシュより前のパスを取得
-  const pathname = usePathname().split("/").slice(0, 4).join("/");
+  // 3つ目のスラッシュより前のパスを取得
+  const pathname = usePathname().split("/").slice(0, 3).join("/");
 
   return (
     <>
