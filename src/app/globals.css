@@ -2,18 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-}
-
 p::first-letter {
-  font-feature-settings: "palt"
+  font-feature-settings: "palt";
 }
 
 @layer utilities {
