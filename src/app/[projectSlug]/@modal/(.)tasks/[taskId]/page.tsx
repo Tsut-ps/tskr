@@ -8,6 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { Modal } from "./modal";
 import { TextFormArea } from "./form";
 import { DatePickerWithRange } from "./date-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default async function Page({
   params,
@@ -18,7 +25,14 @@ export default async function Page({
   };
 }) {
   const supabase = await createClient();
+  const projectSlug = params.projectSlug;
   const taskId = params.taskId;
+
+  const { data: project } = await supabase
+    .from("projects")
+    .select("name, teams(id, name)")
+    .eq("slug", projectSlug)
+    .single();
 
   // 外部キーに基づく関係の自動検出
   const { data: task } = await supabase
@@ -33,7 +47,7 @@ export default async function Page({
     .eq("id", taskId)
     .single();
 
-  if (!task) notFound();
+  if (!project || !task) notFound();
 
   const createdDate = new Date(task.created_at);
   const updatedDate = new Date(task.updated_at);
@@ -63,7 +77,20 @@ export default async function Page({
         <TableBody>
           <TableRow>
             <TableCell className="w-32 text-muted-foreground">チーム</TableCell>
-            <TableCell>{task.team!.name}</TableCell>
+            <TableCell>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder={task.team!.name} />
+                </SelectTrigger>
+                <SelectContent>
+                  {project.teams.map((team, index) => (
+                    <SelectItem key={index} value={team.name}>
+                      {team.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="text-muted-foreground">タグ</TableCell>
