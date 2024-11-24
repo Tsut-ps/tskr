@@ -1,8 +1,5 @@
 import { notFound } from "next/navigation";
-import { ChevronRight } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
-import { cn } from "@/lib/utils";
-import { calcDaysLeft, getDateColor } from "@/utils/date";
 
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
@@ -10,6 +7,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "./modal";
 import { TextFormArea } from "./form";
+import { DatePickerWithRange } from "./date-picker";
 
 export default async function Page({
   params,
@@ -84,22 +82,10 @@ export default async function Page({
               開始/終了予定
             </TableCell>
             <TableCell className="flex items-center gap-1">
-              {task.start_date}
-              <ChevronRight className="inline-block" size="20px" />
-              {task.due_date}
-              <span
-                className={cn(
-                  "ml-1 text-muted-foreground",
-                  getDateColor(task.due_date)
-                )}
-              >
-                {
-                  // 残り日数が0日未満の場合は「(期限切れ)」と表示
-                  calcDaysLeft(task.due_date) < 0
-                    ? "(期限切れ)"
-                    : `(残り${calcDaysLeft(task.due_date)}日)`
-                }
-              </span>
+              <DatePickerWithRange
+                startDate={task.start_date}
+                dueDate={task.due_date}
+              />
             </TableCell>
           </TableRow>
           <TableRow>
