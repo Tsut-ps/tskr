@@ -47,7 +47,6 @@ export function TextFormArea({ defaultValue }: { defaultValue: string }) {
                 <Textarea
                   placeholder="ここにメモを入力"
                   defaultValue={defaultValue}
-                  className="focus-visible:ring-transparent"
                   {...field}
                 />
               </FormControl>
