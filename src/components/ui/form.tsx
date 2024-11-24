@@ -147,6 +147,11 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
+
+  // ローカライズ
+  String(error?.message) === "Required" &&
+    (error!.message = "(必須) メモに更新内容がありません。")
+
   const body = error ? String(error?.message) : children
 
   if (!body) {

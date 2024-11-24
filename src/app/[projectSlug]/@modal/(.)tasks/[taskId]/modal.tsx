@@ -12,7 +12,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
 
 export function Modal({
   children,
@@ -50,7 +49,6 @@ export function Modal({
               : `更新日時: ${updatedTime}`}
           </SheetDescription>
         </SheetHeader>
-        <Separator className="!my-4" />
         {children}
       </SheetContent>
     </Sheet>
