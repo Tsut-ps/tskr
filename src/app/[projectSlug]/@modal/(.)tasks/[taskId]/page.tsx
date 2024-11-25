@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+import { Plus, X } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
@@ -78,9 +79,9 @@ export default async function Page({
           <TableRow>
             <TableCell className="w-32 text-muted-foreground">チーム</TableCell>
             <TableCell>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder={task.team!.name} />
+              <Select defaultValue={task.team!.name}>
+                <SelectTrigger className="w-auto -my-2 -ml-3 pl-4 border-transparent hover:bg-accent hover:text-accent-foreground">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {project.teams.map((team, index) => (
@@ -95,12 +96,14 @@ export default async function Page({
           <TableRow>
             <TableCell className="text-muted-foreground">タグ</TableCell>
             <TableCell>
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap items-center gap-1">
                 {task.tags?.map((tag, index) => (
                   <Badge key={index} variant="secondary">
                     {tag.name}
+                    <X size="16px" className="ml-1" />
                   </Badge>
                 ))}
+                <Plus size="20px" className="ml-1" />
               </div>
             </TableCell>
           </TableRow>
@@ -123,25 +126,50 @@ export default async function Page({
                   task.users.map((user, index) => (
                     <Badge key={index} variant="secondary">
                       {user.name}
+                      <X size="16px" className="ml-1" />
                     </Badge>
                   ))
                 ) : (
                   <span className="text-muted-foreground">(未割り当て)</span>
                 )}
+                <Plus size="20px" className="ml-1" />
               </div>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="text-muted-foreground">ステータス</TableCell>
-            <TableCell>{task.status === "open" ? "進行中" : "完了"}</TableCell>
+            <TableCell>
+              <Select defaultValue="open">
+                <SelectTrigger className="w-auto -my-2 -ml-3 border-transparent hover:bg-accent hover:text-accent-foreground">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={"open"}>進行中</SelectItem>
+                  <SelectItem value={"closed"}>完了</SelectItem>
+                </SelectContent>
+              </Select>
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="text-muted-foreground">
               大体の進捗率
             </TableCell>
             <TableCell className="flex items-center">
-              <Progress value={task.progress} className="w-[60%] h-3 mr-2" />
-              {task.progress}%
+              <Select defaultValue={task.progress.toString()}>
+                <Progress value={task.progress} className="w-[60%] h-3 mr-2" />
+                <SelectTrigger className="w-auto -my-2 border-transparent hover:bg-accent hover:text-accent-foreground">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map(
+                    (value, index) => (
+                      <SelectItem key={index} value={value.toString()}>
+                        {value}%
+                      </SelectItem>
+                    )
+                  )}
+                </SelectContent>
+              </Select>
             </TableCell>
           </TableRow>
         </TableBody>
