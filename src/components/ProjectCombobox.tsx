@@ -1,6 +1,7 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import { useAtom } from "jotai";
@@ -40,7 +41,6 @@ const recentProjectsAtom = atomWithStorage<StoreProject[]>(
 );
 
 export function ProjectCombobox() {
-  const router = useRouter();
   const projectSlug = useParams().projectSlug as string;
 
   const [recentProjects, setRecentProjects] = useAtom(recentProjectsAtom);
@@ -111,40 +111,29 @@ export function ProjectCombobox() {
               <CommandEmpty>プロジェクトが見つかりません。</CommandEmpty>
               <CommandGroup heading="アクセス履歴一覧">
                 {recentProjects.map((project) => (
-                  <CommandItem
-                    key={project.slug}
-                    value={project.name}
-                    onSelect={() => {
-                      setSelectedSlug(project.slug);
-                      setOpen(false);
-                      router.push(`/${project.slug}`);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selectedSlug === project.slug
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                    <span className="truncate">{project.name}</span>
-                  </CommandItem>
+                  <Link key={project.slug} href={`/${project.slug}`}>
+                    <CommandItem value={project.name}>
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedSlug === project.slug
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      <span className="truncate">{project.name}</span>
+                    </CommandItem>
+                  </Link>
                 ))}
               </CommandGroup>
               <CommandSeparator />
               <CommandGroup heading="新規">
-                <CommandItem
-                  value="新しいプロジェクトを作成"
-                  onSelect={() => {
-                    setSelectedSlug("");
-                    setOpen(false);
-                    router.push("/new");
-                  }}
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  新しいプロジェクトを作成
-                </CommandItem>
+                <Link href="/new">
+                  <CommandItem value="新しいプロジェクトを作成">
+                    <Plus className="mr-2 h-4 w-4" />
+                    新しいプロジェクトを作成
+                  </CommandItem>
+                </Link>
               </CommandGroup>
             </CommandList>
           </Command>
