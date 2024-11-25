@@ -31,14 +31,14 @@ export function DatePickerWithRange({
   });
 
   return (
-    <div className={cn("grid gap-2 -mx-4 -my-2", className)}>
+    <div className={cn("grid gap-2 -my-2 -ml-4", className)}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
-            variant={"ghost"}
+            variant="ghost"
             className={cn(
-              "justify-start text-left font-normal",
+              "justify-start text-left font-normal flex-wrap min-h-min",
               !date && "text-muted-foreground"
             )}
           >
@@ -47,30 +47,27 @@ export function DatePickerWithRange({
               date.to ? (
                 <>
                   {format(date.from, "M月d日")}
-                  <ChevronRight className="inline-block" size="20px" />
+                  <ChevronRight />
                   {format(date.to, "M月d日")}
+                  <span
+                    className={cn(
+                      "text-muted-foreground",
+                      getDateColor(date.to.toString())
+                    )}
+                  >
+                    {
+                      // 残り日数が0日未満の場合は「(期限切れ)」と表示
+                      calcDaysLeft(date.to.toString()) < 0
+                        ? "(期限切れ)"
+                        : `(残り${calcDaysLeft(date.to.toString())}日)`
+                    }
+                  </span>
                 </>
               ) : (
                 format(date.from, "M月d日")
               )
             ) : (
               <span>日付を選択</span>
-            )}
-            {date && date.to && (
-              <span
-                className={cn(
-                  "text-muted-foreground",
-                  getDateColor(date.to.toString())
-                )}
-              >
-                {
-                  // 残り日数が0日未満の場合は「(期限切れ)」と表示
-
-                  calcDaysLeft(date.to.toString()) < 0
-                    ? "(期限切れ)"
-                    : `(残り${calcDaysLeft(date.to.toString())}日)`
-                }
-              </span>
             )}
           </Button>
         </PopoverTrigger>
