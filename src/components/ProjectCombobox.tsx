@@ -8,7 +8,7 @@ import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
 import { cn } from "@/lib/utils";
-import { getProjectName } from "./actions";
+import { getProjectName } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import {
   Command,
