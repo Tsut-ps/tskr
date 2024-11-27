@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { updateTaskTeam } from "@/app/actions";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +16,61 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+
+export function TaskTeamArea({
+  preValue,
+  projectSlug,
+  taskId,
+  teams,
+}: {
+  preValue: string;
+  projectSlug: string;
+  taskId: string;
+  teams: { id: string; name: string }[];
+}) {
+  const [selectedTeam, setSelectedTeam] = useState(preValue);
+
+  const handleUpdateTaskTeam = async (selectedValue: string) => {
+    setSelectedTeam(selectedValue); // 楽観的更新
+    const errorCode = await updateTaskTeam(projectSlug, taskId, selectedValue);
+    if (errorCode) {
+      setSelectedTeam(preValue); // 失敗時に元に戻す
+      toast({
+        variant: "destructive",
+        title: "タスクのチームの更新に失敗しました。",
+        description: `何度も続く場合は管理者に連絡してください。(${errorCode})`,
+      });
+    } else {
+      toast({
+        title: "更新済み",
+        description: "タスクのチームを更新しました。",
+      });
+    }
+  };
+
+  return (
+    <Select value={selectedTeam} onValueChange={handleUpdateTaskTeam}>
+      <SelectTrigger className="w-auto -my-2 -ml-3 pl-4 border-transparent hover:bg-accent hover:text-accent-foreground">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {teams.map((team, index) => (
+          <SelectItem key={index} value={team.id}>
+            {team.name}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
 
 const FormSchema = z.object({
   memo: z.string().max(1000, {
@@ -22,7 +78,7 @@ const FormSchema = z.object({
   }),
 });
 
-export function TextFormArea({ defaultValue }: { defaultValue: string }) {
+export function TextFormArea({ preValue }: { preValue: string }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -46,7 +102,7 @@ export function TextFormArea({ defaultValue }: { defaultValue: string }) {
               <FormControl>
                 <Textarea
                   placeholder="ここにメモを入力"
-                  defaultValue={defaultValue}
+                  defaultValue={preValue}
                   {...field}
                 />
               </FormControl>

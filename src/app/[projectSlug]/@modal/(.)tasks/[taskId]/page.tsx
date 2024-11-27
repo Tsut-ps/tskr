@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "./modal";
-import { TextFormArea } from "./form";
+import { TaskTeamArea, TextFormArea } from "./form";
 import { DatePickerWithRange } from "./date-picker";
 import {
   Select,
@@ -79,20 +79,15 @@ export default async function Page({
           <TableRow>
             <TableCell className="w-32 text-muted-foreground">チーム</TableCell>
             <TableCell>
-              <Select defaultValue={task.team!.name}>
-                <SelectTrigger className="w-auto -my-2 -ml-3 pl-4 border-transparent hover:bg-accent hover:text-accent-foreground">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {project.teams.map((team, index) => (
-                    <SelectItem key={index} value={team.name}>
-                      {team.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <TaskTeamArea
+                preValue={task.team!.id}
+                projectSlug={projectSlug}
+                taskId={task.id}
+                teams={project.teams}
+              />
             </TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell className="text-muted-foreground">タグ</TableCell>
             <TableCell>
@@ -107,6 +102,7 @@ export default async function Page({
               </div>
             </TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell className="text-muted-foreground">
               開始/終了予定
@@ -118,6 +114,7 @@ export default async function Page({
               />
             </TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell className="text-muted-foreground">担当者</TableCell>
             <TableCell>
@@ -136,6 +133,7 @@ export default async function Page({
               </div>
             </TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell className="text-muted-foreground">ステータス</TableCell>
             <TableCell>
@@ -150,6 +148,7 @@ export default async function Page({
               </Select>
             </TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell className="text-muted-foreground">
               大体の進捗率
@@ -175,7 +174,7 @@ export default async function Page({
         </TableBody>
       </Table>
       <Separator className="!mb-6" />
-      <TextFormArea defaultValue={task.description as string} />
+      <TextFormArea preValue={task.description as string} />
     </Modal>
   );
 }
