@@ -4,9 +4,11 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Plus, X } from "lucide-react";
 
-import { updateTaskTeam } from "@/app/actions";
+import { updateTaskTeam, deleteTaskTag } from "@/app/actions";
 import { toast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -69,6 +71,48 @@ export function TaskTeamArea({
         ))}
       </SelectContent>
     </Select>
+  );
+}
+
+export function TaskTagArea({
+  projectSlug,
+  taskId,
+  tags,
+}: {
+  projectSlug: string;
+  taskId: string;
+  tags: { id: string; name: string }[];
+}) {
+  const handleDeleteTaskTag = async (selectedValue: string) => {
+    const errorCode = await deleteTaskTag(projectSlug, taskId, selectedValue);
+    if (errorCode) {
+      toast({
+        variant: "destructive",
+        title: "タスクのタグの削除に失敗しました。",
+        description: `何度も続く場合は管理者に連絡してください。(${errorCode})`,
+      });
+    } else {
+      toast({
+        title: "削除済み",
+        description: "タスクのタグを削除しました。",
+      });
+    }
+  };
+
+  return (
+    <div className="flex flex-wrap items-center gap-1">
+      {tags?.map((tag, index) => (
+        <Badge key={index} variant="secondary">
+          {tag.name}
+          <X
+            size="16px"
+            className="ml-1 hover:opacity-50 cursor-pointer"
+            onClick={() => handleDeleteTaskTag(tag.id)}
+          />
+        </Badge>
+      ))}
+      <Plus size="20px" className="ml-1" />
+    </div>
   );
 }
 

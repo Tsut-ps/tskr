@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Modal } from "./modal";
-import { TaskTeamArea, TextFormArea } from "./form";
+import { TaskTeamArea, TaskTagArea, TextFormArea } from "./form";
 import { DatePickerWithRange } from "./date-picker";
 import {
   Select,
@@ -91,15 +91,11 @@ export default async function Page({
           <TableRow>
             <TableCell className="text-muted-foreground">タグ</TableCell>
             <TableCell>
-              <div className="flex flex-wrap items-center gap-1">
-                {task.tags?.map((tag, index) => (
-                  <Badge key={index} variant="secondary">
-                    {tag.name}
-                    <X size="16px" className="ml-1" />
-                  </Badge>
-                ))}
-                <Plus size="20px" className="ml-1" />
-              </div>
+              <TaskTagArea
+                projectSlug={projectSlug}
+                taskId={task.id}
+                tags={task.tags}
+              />
             </TableCell>
           </TableRow>
 

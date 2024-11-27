@@ -38,3 +38,26 @@ export async function updateTaskTeam(
   const errorCode = error ? status : undefined;
   return errorCode;
 }
+
+export async function deleteTaskTag(
+  projectSlug: string,
+  taskId: string,
+  tagId: string
+) {
+  const supabase = await createClient();
+
+  // エラーがなければ削除した1行のデータが返る
+  const { status, error } = await supabase
+    .from("task_tags")
+    .delete()
+    .match({ task_id: taskId, tag_id: tagId })
+    .select()
+    .single();
+
+  error && console.error(error);
+  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+
+  // エラー時のみステータスコードを返す
+  const errorCode = error ? status : undefined;
+  return errorCode;
+}
