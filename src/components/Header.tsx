@@ -30,7 +30,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { link: "", label: "全体" },
   { link: "/tasks", label: "タスク" },
-  { link: "/charts", label: "チャート" },
+  //  { link: "/charts", label: "チャート" },
   { link: "/settings", label: "設定" },
 ];
 
