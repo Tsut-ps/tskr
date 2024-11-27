@@ -23,6 +23,7 @@ export async function updateTaskTeam(
   const supabase = await createClient();
 
   // エラーがなければ更新した1行のデータが返る
+  // RLS 未設定などで0行更新(成功)になるときの対策
   const { status, error } = await supabase
     .from("tasks")
     .update({ team_id: teamId })
@@ -30,6 +31,7 @@ export async function updateTaskTeam(
     .select()
     .single();
 
+  error && console.error(error);
   revalidatePath(`${projectSlug}/tasks/${taskId}`);
 
   // エラー時のみステータスコードを返す
