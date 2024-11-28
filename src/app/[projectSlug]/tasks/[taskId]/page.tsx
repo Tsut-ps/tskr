@@ -97,7 +97,6 @@ export default async function Page({
               <TableCell>
                 <TaskTeamSelect
                   preValue={task.team!.id}
-                  projectSlug={projectSlug}
                   taskId={task.id}
                   teams={project.teams}
                 />
@@ -148,7 +147,6 @@ export default async function Page({
               </TableCell>
               <TableCell>
                 <TaskStatusSelect
-                  projectSlug={projectSlug}
                   taskId={task.id}
                   status={task.status}
                 />
@@ -161,7 +159,6 @@ export default async function Page({
               </TableCell>
               <TableCell className="flex items-center">
                 <TaskProgressSelect
-                  projectSlug={projectSlug}
                   taskId={task.id}
                   progress={task.progress}
                 />
@@ -170,7 +167,6 @@ export default async function Page({
           </TableBody>
         </Table>
         <TaskDescriptionForm
-          projectSlug={projectSlug}
           taskId={task.id}
           description={task.description as string}
         />
