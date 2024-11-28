@@ -14,12 +14,10 @@ import {
 
 export function TaskTeamSelect({
   preValue,
-  projectSlug,
   taskId,
   teams,
 }: {
   preValue: string;
-  projectSlug: string;
   taskId: string;
   teams: { id: string; name: string }[];
 }) {
@@ -27,7 +25,7 @@ export function TaskTeamSelect({
 
   const handleUpdateTaskTeam = async (selectedValue: string) => {
     setSelectedTeam(selectedValue); // 楽観的更新
-    const errorCode = await updateTaskTeam(projectSlug, taskId, selectedValue);
+    const errorCode = await updateTaskTeam(taskId, selectedValue);
     if (errorCode) {
       setSelectedTeam(preValue); // 失敗時に元に戻す
       toast({

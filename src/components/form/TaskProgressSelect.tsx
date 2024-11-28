@@ -14,11 +14,9 @@ import {
 import { Progress } from "@/components/ui/progress";
 
 export function TaskProgressSelect({
-  projectSlug,
   taskId,
   progress,
 }: {
-  projectSlug: string;
   taskId: string;
   progress: number;
 }) {
@@ -26,11 +24,7 @@ export function TaskProgressSelect({
 
   const handleUpdateTaskProgress = async (selectedValue: string) => {
     setSelectedProgress(Number(selectedValue)); // 楽観的更新
-    const errorCode = await updateTaskProgress(
-      projectSlug,
-      taskId,
-      Number(selectedValue)
-    );
+    const errorCode = await updateTaskProgress(taskId, Number(selectedValue));
     if (errorCode) {
       setSelectedProgress(progress); // 失敗時に元に戻す
       toast({

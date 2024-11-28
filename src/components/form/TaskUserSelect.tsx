@@ -35,7 +35,7 @@ export function TaskUserSelect({
   const [searchValue, setSearchValue] = useState("");
 
   const handleDeleteTaskUser = async (selectedValue: string) => {
-    const errorCode = await deleteTaskUser(projectSlug, taskId, selectedValue);
+    const errorCode = await deleteTaskUser(taskId, selectedValue);
     if (errorCode) {
       toast({
         variant: "destructive",
@@ -75,7 +75,7 @@ export function TaskUserSelect({
   };
 
   const handleAddTaskUser = async (selectedValue: string) => {
-    const errorCode = await addTaskUser(projectSlug, taskId, selectedValue);
+    const errorCode = await addTaskUser(taskId, selectedValue);
     if (errorCode) {
       toast({
         variant: "destructive",

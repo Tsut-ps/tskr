@@ -39,7 +39,7 @@ export function TaskTagSelect({
   const [searchValue, setSearchValue] = useState("");
 
   const handleDeleteTaskTag = async (selectedValue: string) => {
-    const errorCode = await deleteTaskTag(projectSlug, taskId, selectedValue);
+    const errorCode = await deleteTaskTag(taskId, selectedValue);
     if (errorCode) {
       toast({
         variant: "destructive",
@@ -79,7 +79,7 @@ export function TaskTagSelect({
   };
 
   const handleAddTaskTag = async (selectedValue: string) => {
-    const errorCode = await addTaskTag(projectSlug, taskId, selectedValue);
+    const errorCode = await addTaskTag(taskId, selectedValue);
     if (errorCode) {
       toast({
         variant: "destructive",

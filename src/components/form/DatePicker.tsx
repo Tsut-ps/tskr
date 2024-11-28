@@ -20,7 +20,6 @@ import {
 
 export function DatePickerWithRange({
   className,
-  projectSlug,
   taskId,
   startDate,
   dueDate,
@@ -45,7 +44,6 @@ export function DatePickerWithRange({
     const startDate = format(newDate.from, "yyyy-MM-dd");
     const dueDate = format(newDate.to, "yyyy-MM-dd");
     const errorCode = await updateTaskDate(
-      projectSlug,
       taskId,
       startDate,
       dueDate

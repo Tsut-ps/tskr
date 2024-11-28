@@ -14,10 +14,8 @@ const selectedUserIdAtom = atomWithStorage<string>("user", "", undefined, {
 });
 
 export function UserTeamSelect({
-  projectSlug,
   teams,
 }: {
-  projectSlug: string;
   teams: { id: string; name: string; users: { id: string }[] }[];
 }) {
   const [userId] = useAtom(selectedUserIdAtom);
@@ -32,7 +30,7 @@ export function UserTeamSelect({
   }, []);
 
   const handleAddUserTeam = async (teamId: string) => {
-    const errorCode = await addUserTeam(projectSlug, userId, teamId);
+    const errorCode = await addUserTeam(userId, teamId);
     if (errorCode) {
       toast({
         variant: "destructive",
@@ -43,7 +41,7 @@ export function UserTeamSelect({
   };
 
   const handleDeleteUserTeam = async (teamId: string) => {
-    const errorCode = await deleteUserTeam(projectSlug, userId, teamId);
+    const errorCode = await deleteUserTeam(userId, teamId);
     if (errorCode) {
       toast({
         variant: "destructive",

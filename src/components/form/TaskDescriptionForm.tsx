@@ -24,11 +24,9 @@ const FormSchema = z.object({
 });
 
 export function TaskDescriptionForm({
-  projectSlug,
   taskId,
   description,
 }: {
-  projectSlug: string;
   taskId: string;
   description: string;
 }) {
@@ -38,11 +36,7 @@ export function TaskDescriptionForm({
 
   const onSubmit = async () => {
     const { description } = form.getValues();
-    const errorCode = await updateTaskDescription(
-      projectSlug,
-      taskId,
-      description
-    );
+    const errorCode = await updateTaskDescription(taskId, description);
     if (errorCode) {
       toast({
         variant: "destructive",

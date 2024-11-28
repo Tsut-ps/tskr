@@ -13,11 +13,9 @@ import {
 } from "@/components/ui/select";
 
 export function TaskStatusSelect({
-  projectSlug,
   taskId,
   status,
 }: {
-  projectSlug: string;
   taskId: string;
   status: string;
 }) {
@@ -25,11 +23,7 @@ export function TaskStatusSelect({
 
   const handleUpdateTaskStatus = async (selectedValue: string) => {
     setSelectedStatus(selectedValue); // 楽観的更新
-    const errorCode = await updateTaskStatus(
-      projectSlug,
-      taskId,
-      selectedValue
-    );
+    const errorCode = await updateTaskStatus(taskId, selectedValue);
     if (errorCode) {
       setSelectedStatus(status); // 失敗時に元に戻す
       toast({

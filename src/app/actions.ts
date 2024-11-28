@@ -27,11 +27,7 @@ export async function getProjectId(slug: string) {
   return project?.id;
 }
 
-export async function updateTaskTeam(
-  projectSlug: string,
-  taskId: string,
-  teamId: string
-) {
+export async function updateTaskTeam(taskId: string, teamId: string) {
   const supabase = await createClient();
 
   // エラーがなければ更新した1行のデータが返る
@@ -44,18 +40,14 @@ export async function updateTaskTeam(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+  revalidatePath("/[projectSlug]/task/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
   return errorCode;
 }
 
-export async function deleteTaskTag(
-  projectSlug: string,
-  taskId: string,
-  tagId: string
-) {
+export async function deleteTaskTag(taskId: string, tagId: string) {
   const supabase = await createClient();
 
   // エラーがなければ削除した1行のデータが返る
@@ -67,7 +59,7 @@ export async function deleteTaskTag(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+  revalidatePath("/[projectSlug]/task/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
@@ -92,11 +84,7 @@ export async function createProjectTag(projectSlug: string, tagName: string) {
   return { tagId, errorCode };
 }
 
-export async function addTaskTag(
-  projectSlug: string,
-  taskId: string,
-  tagId: string
-) {
+export async function addTaskTag(taskId: string, tagId: string) {
   const supabase = await createClient();
 
   // エラーがなければ追加した1行のデータが返る
@@ -107,7 +95,7 @@ export async function addTaskTag(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+  revalidatePath("/[projectSlug]/task/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
@@ -115,7 +103,6 @@ export async function addTaskTag(
 }
 
 export async function updateTaskDate(
-  projectSlug: string,
   taskId: string,
   startDate: string,
   dueDate: string
@@ -131,18 +118,14 @@ export async function updateTaskDate(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+  revalidatePath("/[projectSlug]/task/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
   return errorCode;
 }
 
-export async function deleteTaskUser(
-  projectSlug: string,
-  taskId: string,
-  userId: string
-) {
+export async function deleteTaskUser(taskId: string, userId: string) {
   const supabase = await createClient();
 
   // エラーがなければ削除した1行のデータが返る
@@ -154,7 +137,7 @@ export async function deleteTaskUser(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+  revalidatePath("/[projectSlug]/task/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
@@ -178,18 +161,15 @@ export async function createProjectUser(
 
   const userId = data?.id;
 
-  revalidateTarget === "settings" && revalidatePath(`${projectSlug}/settings`);
+  revalidateTarget === "settings" &&
+    revalidatePath("/[projectSlug]/settings", "page");
 
   error && console.error(error);
   const errorCode = error ? status : undefined;
   return { userId, errorCode };
 }
 
-export async function addTaskUser(
-  projectSlug: string,
-  taskId: string,
-  userId: string
-) {
+export async function addTaskUser(taskId: string, userId: string) {
   const supabase = await createClient();
 
   // エラーがなければ追加した1行のデータが返る
@@ -200,18 +180,14 @@ export async function addTaskUser(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+  revalidatePath("/[projectSlug]/task/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
   return errorCode;
 }
 
-export async function updateTaskStatus(
-  projectSlug: string,
-  taskId: string,
-  taskStatus: string
-) {
+export async function updateTaskStatus(taskId: string, taskStatus: string) {
   const supabase = await createClient();
 
   // エラーがなければ更新した1行のデータが返る
@@ -223,18 +199,14 @@ export async function updateTaskStatus(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+  revalidatePath("/[projectSlug]/task/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? resStatus : undefined;
   return errorCode;
 }
 
-export async function updateTaskProgress(
-  projectSlug: string,
-  taskId: string,
-  progress: number
-) {
+export async function updateTaskProgress(taskId: string, progress: number) {
   const supabase = await createClient();
 
   // エラーがなければ更新した1行のデータが返る
@@ -246,7 +218,7 @@ export async function updateTaskProgress(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+  revalidatePath("/[projectSlug]/task/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? resStatus : undefined;
@@ -254,7 +226,6 @@ export async function updateTaskProgress(
 }
 
 export async function updateTaskDescription(
-  projectSlug: string,
   taskId: string,
   description: string
 ) {
@@ -269,18 +240,14 @@ export async function updateTaskDescription(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+  revalidatePath("/[projectSlug]/task/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? resStatus : undefined;
   return errorCode;
 }
 
-export async function addUserTeam(
-  projectSlug: string,
-  userId: string,
-  teamId: string
-) {
+export async function addUserTeam(userId: string, teamId: string) {
   const supabase = await createClient();
 
   // エラーがなければ更新した1行のデータが返る
@@ -291,18 +258,14 @@ export async function addUserTeam(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/settings`);
+  revalidatePath("/[projectSlug]/settings", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
   return errorCode;
 }
 
-export async function deleteUserTeam(
-  projectSlug: string,
-  userId: string,
-  teamId: string
-) {
+export async function deleteUserTeam(userId: string, teamId: string) {
   const supabase = await createClient();
 
   // エラーがなければ削除した1行のデータが返る
@@ -314,7 +277,7 @@ export async function deleteUserTeam(
     .single();
 
   error && console.error(error);
-  revalidatePath(`${projectSlug}/settings`);
+  revalidatePath("/[projectSlug]/settings", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
