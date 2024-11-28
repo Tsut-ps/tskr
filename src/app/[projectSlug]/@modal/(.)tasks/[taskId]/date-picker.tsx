@@ -100,7 +100,9 @@ export function DatePickerWithRange({
                 </>
               ) : (
                 <>
-                  {format(date.from, "M月d日")}
+                  <span className="text-muted-foreground">
+                    {format(date.from, "M月d日")}
+                  </span>
                   <ChevronRight />
                   <span className="text-red-500">日付を選択</span>
                 </>
