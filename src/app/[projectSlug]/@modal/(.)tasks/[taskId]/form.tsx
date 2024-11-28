@@ -122,7 +122,7 @@ export function TaskTagArea({
     }
   };
 
-  const handleAddTaskNewTag = async () => {
+  const handleCreateNewTag = async () => {
     if (!searchValue) {
       toast({
         variant: "destructive",
@@ -131,25 +131,19 @@ export function TaskTagArea({
       });
       return;
     }
-    const { errorCode, addErrorCode } = await createTaskTag(
+    const { tagId, errorCode } = await createTaskTag(
       projectSlug,
       taskId,
       searchValue
     );
-    if (errorCode || addErrorCode) {
+    if (errorCode || !tagId) {
       toast({
         variant: "destructive",
-        title: "タグの追加に失敗しました。",
-        description: `何度も続く場合は管理者に連絡してください。(${
-          errorCode || addErrorCode
-        })`,
+        title: "タグの作成に失敗しました。",
+        description: `何度も続く場合は管理者に連絡してください。(${errorCode})`,
       });
     } else {
-      setSearchValue("");
-      toast({
-        title: "追加済み",
-        description: "タグを追加しました。",
-      });
+      handleAddTaskTag(tagId);
     }
   };
 
@@ -197,7 +191,7 @@ export function TaskTagArea({
             <CommandList>
               <CommandEmpty
                 className="py-6 text-center text-sm hover:opacity-50 cursor-pointer"
-                onClick={() => handleAddTaskNewTag()}
+                onClick={() => handleCreateNewTag()}
               >
                 タグを追加
               </CommandEmpty>

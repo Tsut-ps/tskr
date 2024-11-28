@@ -89,15 +89,11 @@ export async function createTaskTag(
     .select()
     .single();
 
-  if (error) {
-    console.error(error);
-    const errorCode = error ? status : undefined;
-    return { errorCode };
-  }
+  const tagId = data?.id;
 
-  const addErrorCode = await addTaskTag(projectSlug, taskId, data.id);
-
-  return { addErrorCode };
+  error && console.error(error);
+  const errorCode = error ? status : undefined;
+  return { tagId, errorCode };
 }
 
 export async function addTaskTag(
@@ -135,6 +131,51 @@ export async function updateTaskDate(
     .from("tasks")
     .update({ start_date: startDate, due_date: dueDate })
     .eq("id", taskId)
+    .select()
+    .single();
+
+  error && console.error(error);
+  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+
+  // エラー時のみステータスコードを返す
+  const errorCode = error ? status : undefined;
+  return errorCode;
+}
+
+export async function deleteTaskUser(
+  projectSlug: string,
+  taskId: string,
+  userId: string
+) {
+  const supabase = await createClient();
+
+  // エラーがなければ削除した1行のデータが返る
+  const { status, error } = await supabase
+    .from("task_users")
+    .delete()
+    .match({ task_id: taskId, user_id: userId })
+    .select()
+    .single();
+
+  error && console.error(error);
+  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+
+  // エラー時のみステータスコードを返す
+  const errorCode = error ? status : undefined;
+  return errorCode;
+}
+
+export async function addTaskUser(
+  projectSlug: string,
+  taskId: string,
+  userId: string
+) {
+  const supabase = await createClient();
+
+  // エラーがなければ追加した1行のデータが返る
+  const { status, error } = await supabase
+    .from("task_users")
+    .insert({ task_id: taskId, user_id: userId })
     .select()
     .single();
 
