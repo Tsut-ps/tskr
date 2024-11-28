@@ -37,7 +37,7 @@ export default async function Page({
   if (!project) notFound();
 
   return (
-    <main className="flex gap-4 p-4 md:gap-6 md:py-8 overflow-x-auto w-full scrollbar-hide">
+    <main className="flex gap-4 p-4 md:gap-6 md:py-8 overflow-x-auto w-full h-[calc(100svh-4rem)] shadcn-scrollbar">
       {project.teams?.map((team, index) => (
         <div key={index} className="w-96 flex-none">
           <div className="flex flex-row items-center p-3">
