@@ -5,9 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { toast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -72,22 +70,6 @@ export function ProfileForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ユーザー名</FormLabel>
-              <FormControl>
-                <Input {...field} disabled />
-              </FormControl>
-              <FormDescription>
-                ユーザー名は変更できません。変更したい場合、新しく作成してください。
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="items"
           render={() => (
             <FormItem>
@@ -134,7 +116,6 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">更新する</Button>
       </form>
     </Form>
   );

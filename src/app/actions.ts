@@ -161,7 +161,11 @@ export async function deleteTaskUser(
   return errorCode;
 }
 
-export async function createProjectUser(projectSlug: string, userName: string) {
+export async function createProjectUser(
+  projectSlug: string,
+  userName: string,
+  revalidateTarget?: string
+) {
   const supabase = await createClient();
   const projectId = (await getProjectId(projectSlug)) as string;
 
@@ -173,6 +177,8 @@ export async function createProjectUser(projectSlug: string, userName: string) {
     .single();
 
   const userId = data?.id;
+
+  revalidateTarget === "settings" && revalidatePath(`${projectSlug}/settings`);
 
   error && console.error(error);
   const errorCode = error ? status : undefined;
