@@ -491,7 +491,7 @@ export function TaskDescriptionArea({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid w-full gap-2"
+        className="flex flex-col w-full gap-2"
       >
         <FormField
           control={form.control}
