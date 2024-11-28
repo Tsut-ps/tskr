@@ -7,7 +7,9 @@ import { DateRange } from "react-day-picker";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { calcDaysLeft, getDateColor } from "@/utils/date";
+import { toast } from "@/hooks/use-toast";
 
+import { updateTaskDate } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -18,17 +20,50 @@ import {
 
 export function DatePickerWithRange({
   className,
+  projectSlug,
+  taskId,
   startDate,
   dueDate,
 }: {
   className?: React.HTMLAttributes<HTMLDivElement>;
-  startDate: string;
-  dueDate: string;
+  projectSlug: string;
+  taskId: string;
+  startDate: string | undefined;
+  dueDate: string | undefined;
 }) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(startDate),
-    to: new Date(dueDate),
+    from: startDate ? new Date(startDate) : undefined,
+    to: dueDate ? new Date(dueDate) : undefined,
   });
+
+  const handleUpdateDate = async (newDate: DateRange | undefined) => {
+    const preValue = date;
+    setDate(newDate);
+
+    // 開始日と期限日が選択されている場合のみ更新
+    if (!newDate?.from || !newDate?.to) return;
+    const startDate = format(newDate.from, "yyyy-MM-dd");
+    const dueDate = format(newDate.to, "yyyy-MM-dd");
+    const errorCode = await updateTaskDate(
+      projectSlug,
+      taskId,
+      startDate,
+      dueDate
+    );
+    if (errorCode) {
+      setDate(preValue); // 失敗時に元に戻す
+      toast({
+        variant: "destructive",
+        title: "日付の更新に失敗しました。",
+        description: `何度も続く場合は管理者に連絡してください。(${errorCode})`,
+      });
+    } else {
+      toast({
+        title: "更新済み",
+        description: "日付を更新しました。",
+      });
+    }
+  };
 
   return (
     <div className={cn("grid gap-2 -my-2 -ml-4", className)}>
@@ -64,10 +99,14 @@ export function DatePickerWithRange({
                   </span>
                 </>
               ) : (
-                format(date.from, "M月d日")
+                <>
+                  {format(date.from, "M月d日")}
+                  <ChevronRight />
+                  <span className="text-red-500">日付を選択</span>
+                </>
               )
             ) : (
-              <span>日付を選択</span>
+              <span className="text-red-500">日付を選択</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -77,7 +116,7 @@ export function DatePickerWithRange({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={handleUpdateDate}
             numberOfMonths={1}
           />
         </PopoverContent>

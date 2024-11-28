@@ -106,8 +106,10 @@ export default async function Page({
             </TableCell>
             <TableCell className="flex items-center gap-1">
               <DatePickerWithRange
-                startDate={task.start_date}
-                dueDate={task.due_date}
+                projectSlug={projectSlug}
+                taskId={task.id}
+                startDate={task.start_date || undefined}
+                dueDate={task.due_date || undefined}
               />
             </TableCell>
           </TableRow>

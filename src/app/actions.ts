@@ -121,3 +121,27 @@ export async function addTaskTag(
   const errorCode = error ? status : undefined;
   return errorCode;
 }
+
+export async function updateTaskDate(
+  projectSlug: string,
+  taskId: string,
+  startDate: string,
+  dueDate: string
+) {
+  const supabase = await createClient();
+
+  // エラーがなければ更新した1行のデータが返る
+  const { status, error } = await supabase
+    .from("tasks")
+    .update({ start_date: startDate, due_date: dueDate })
+    .eq("id", taskId)
+    .select()
+    .single();
+
+  error && console.error(error);
+  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+
+  // エラー時のみステータスコードを返す
+  const errorCode = error ? status : undefined;
+  return errorCode;
+}
