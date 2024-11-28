@@ -48,7 +48,7 @@ const defaultValues: Partial<ProfileFormValues> = {
   items: [],
 };
 
-export function ProfileForm() {
+export function UserTeamSelect() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,

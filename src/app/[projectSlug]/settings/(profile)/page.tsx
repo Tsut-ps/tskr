@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
 import { Separator } from "@/components/ui/separator";
-import { ProjectUserSelect } from "@/components/form/ProjectUserSelect";
-import { ProfileForm } from "./profile-form";
+import { UserSelect } from "@/components/form/UserSelect";
+import { UserTeamSelect } from "@/components/form/UserTeamSelect";
 
 export default async function SettingProfilePage({
   params,
@@ -33,12 +33,12 @@ export default async function SettingProfilePage({
       <Separator />
       <div>
         <p>ユーザー名</p>
-        <ProjectUserSelect projectSlug={projectSlug} users={project.users} />
+        <UserSelect projectSlug={projectSlug} users={project.users} />
         <p className="text-sm text-muted-foreground">
           ユーザー名は変更できません。変更したい場合、新しく作成してください。
         </p>
       </div>
-      <ProfileForm />
+      <UserTeamSelect />
     </div>
   );
 }

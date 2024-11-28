@@ -28,7 +28,7 @@ const selectedUserIdAtom = atomWithStorage<string>("user", "", undefined, {
   getOnInit: true,
 });
 
-export function ProjectUserSelect({
+export function UserSelect({
   projectSlug,
   users,
 }: {
