@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
 import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Modal } from "./modal";
 import {
@@ -14,13 +13,6 @@ import {
   TaskProgressArea,
 } from "./form";
 import { DatePickerWithRange } from "./date-picker";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export default async function Page({
   params,
@@ -147,21 +139,11 @@ export default async function Page({
               大体の進捗率
             </TableCell>
             <TableCell className="flex items-center">
-              <Select defaultValue={task.progress.toString()}>
-                <Progress value={task.progress} className="w-[60%] h-3 mr-2" />
-                <SelectTrigger className="w-auto -my-2 border-transparent hover:bg-accent hover:text-accent-foreground">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map(
-                    (value, index) => (
-                      <SelectItem key={index} value={value.toString()}>
-                        {value}%
-                      </SelectItem>
-                    )
-                  )}
-                </SelectContent>
-              </Select>
+              <TaskProgressArea
+                projectSlug={projectSlug}
+                taskId={task.id}
+                progress={task.progress}
+              />
             </TableCell>
           </TableRow>
         </TableBody>
