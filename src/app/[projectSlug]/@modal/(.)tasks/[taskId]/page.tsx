@@ -31,7 +31,7 @@ export default async function Page({
 
   const { data: project } = await supabase
     .from("projects")
-    .select("name, teams(id, name)")
+    .select("name, teams(id, name), tags(id, name)")
     .eq("slug", projectSlug)
     .single();
 
@@ -94,6 +94,7 @@ export default async function Page({
               <TaskTagArea
                 projectSlug={projectSlug}
                 taskId={task.id}
+                allTags={project.tags}
                 tags={task.tags}
               />
             </TableCell>
