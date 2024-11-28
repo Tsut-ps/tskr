@@ -275,3 +275,48 @@ export async function updateTaskDescription(
   const errorCode = error ? resStatus : undefined;
   return errorCode;
 }
+
+export async function addUserTeam(
+  projectSlug: string,
+  userId: string,
+  teamId: string
+) {
+  const supabase = await createClient();
+
+  // エラーがなければ更新した1行のデータが返る
+  const { status, error } = await supabase
+    .from("user_teams")
+    .insert({ user_id: userId, team_id: teamId })
+    .select()
+    .single();
+
+  error && console.error(error);
+  revalidatePath(`${projectSlug}/settings`);
+
+  // エラー時のみステータスコードを返す
+  const errorCode = error ? status : undefined;
+  return errorCode;
+}
+
+export async function deleteUserTeam(
+  projectSlug: string,
+  userId: string,
+  teamId: string
+) {
+  const supabase = await createClient();
+
+  // エラーがなければ削除した1行のデータが返る
+  const { status, error } = await supabase
+    .from("user_teams")
+    .delete()
+    .match({ user_id: userId, team_id: teamId })
+    .select()
+    .single();
+
+  error && console.error(error);
+  revalidatePath(`${projectSlug}/settings`);
+
+  // エラー時のみステータスコードを返す
+  const errorCode = error ? status : undefined;
+  return errorCode;
+}

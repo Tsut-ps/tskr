@@ -1,122 +1,92 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
+import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { toast } from "@/hooks/use-toast";
+import { addUserTeam, deleteUserTeam } from "@/app/actions";
+
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 
-const items = [
-  {
-    id: "0001",
-    label: "音源班",
-  },
-  {
-    id: "0002",
-    label: "バンド班",
-  },
-  {
-    id: "0003",
-    label: "映像班",
-  },
-  {
-    id: "0004",
-    label: "マネジメント",
-  },
-] as const;
-
-const profileFormSchema = z.object({
-  username: z.string(),
-  items: z.array(z.string()),
+// ユーザーを記録するアトム
+const selectedUserIdAtom = atomWithStorage<string>("user", "", undefined, {
+  getOnInit: true,
 });
 
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
+export function UserTeamSelect({
+  projectSlug,
+  teams,
+}: {
+  projectSlug: string;
+  teams: { id: string; name: string; users: { id: string }[] }[];
+}) {
+  const [userId] = useAtom(selectedUserIdAtom);
+  const [mounted, setMounted] = useState(false);
+  const userTeams = teams?.filter((team) =>
+    team.users?.some((user) => user.id === userId)
+  );
 
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  username: "",
-  items: [],
-};
+  // ハイドレーションエラー対策
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-export function UserTeamSelect() {
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFormSchema),
-    defaultValues,
-  });
+  const handleAddUserTeam = async (teamId: string) => {
+    const errorCode = await addUserTeam(projectSlug, userId, teamId);
+    if (errorCode) {
+      toast({
+        variant: "destructive",
+        title: "所属チームの選択に失敗しました。",
+        description: errorCode,
+      });
+    }
+  };
 
-  function onSubmit(data: ProfileFormValues) {
-    toast({
-      title: "以下の内容で保存しました。",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+  const handleDeleteUserTeam = async (teamId: string) => {
+    const errorCode = await deleteUserTeam(projectSlug, userId, teamId);
+    if (errorCode) {
+      toast({
+        variant: "destructive",
+        title: "所属チームの削除に失敗しました。",
+        description: errorCode,
+      });
+    }
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="items"
-          render={() => (
-            <FormItem>
-              <div className="mb-4">
-                <FormLabel className="text-base">所属チーム</FormLabel>
-                <FormDescription>
-                  携わっているチームを選択すると、使いやすくなります。
-                </FormDescription>
-              </div>
-              {items.map((item) => (
-                <FormField
-                  key={item.id}
-                  control={form.control}
-                  name="items"
-                  render={({ field }) => {
-                    return (
-                      <FormItem
-                        key={item.id}
-                        className="flex flex-row items-start space-x-3 space-y-0"
-                      >
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(item.id)}
-                            onCheckedChange={(checked) => {
-                              return checked
-                                ? field.onChange([...field.value, item.id])
-                                : field.onChange(
-                                    field.value?.filter(
-                                      (value) => value !== item.id
-                                    )
-                                  );
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          {item.label}
-                        </FormLabel>
-                      </FormItem>
-                    );
-                  }}
-                />
-              ))}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
+    <div className="space-y-8">
+      <div>
+        <div>
+          <div className="mb-4">
+            <div className="text-base">所属チーム</div>
+            <div className="text-muted-foreground">
+              携わっているチームを選択すると、「全体」にて所属チームのタスクを確認できます。
+            </div>
+          </div>
+          {teams?.map((team, index) => (
+            <div
+              key={index}
+              className="flex flex-row items-center space-x-3 space-y-1"
+            >
+              <Checkbox
+                id={team.id}
+                checked={
+                  mounted &&
+                  userTeams?.some((userTeam) => userTeam.id === team.id)
+                }
+                onCheckedChange={(checked) => {
+                  checked
+                    ? handleAddUserTeam(team.id)
+                    : handleDeleteUserTeam(team.id);
+                }}
+              />
+              <label htmlFor={team.id} className="font-normal">
+                {team.name}
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

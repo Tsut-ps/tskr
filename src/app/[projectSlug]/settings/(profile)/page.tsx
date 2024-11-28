@@ -16,11 +16,16 @@ export default async function SettingProfilePage({
   // 外部キーに基づく関係の自動検出
   const { data: project } = await supabase
     .from("projects")
-    .select(`name, users(id, name)`)
+    .select(`id, name, users(id, name)`)
     .eq("slug", projectSlug)
     .single();
 
   if (!project) notFound();
+
+  const { data: teams } = await supabase
+    .from("teams")
+    .select("id, name, users(id)")
+    .eq("project_id", project.id);
 
   return (
     <div className="space-y-6">
@@ -38,7 +43,7 @@ export default async function SettingProfilePage({
           ユーザー名は変更できません。変更したい場合、新しく作成してください。
         </p>
       </div>
-      <UserTeamSelect />
+      <UserTeamSelect projectSlug={projectSlug} teams={teams || []} />
     </div>
   );
 }
