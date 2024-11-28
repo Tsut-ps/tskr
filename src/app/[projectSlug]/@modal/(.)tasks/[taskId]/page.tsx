@@ -7,10 +7,10 @@ import { Modal } from "./modal";
 import {
   TaskTeamArea,
   TaskTagArea,
-  TextFormArea,
   TaskUserArea,
   TaskStatusArea,
   TaskProgressArea,
+  TaskDescriptionArea,
 } from "./form";
 import { DatePickerWithRange } from "./date-picker";
 
@@ -149,7 +149,11 @@ export default async function Page({
         </TableBody>
       </Table>
       <Separator className="!mb-6" />
-      <TextFormArea preValue={task.description as string} />
+      <TaskDescriptionArea
+        projectSlug={projectSlug}
+        taskId={task.id}
+        description={task.description as string}
+      />
     </Modal>
   );
 }

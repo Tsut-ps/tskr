@@ -16,6 +16,7 @@ import {
   addTaskUser,
   updateTaskStatus,
   updateTaskProgress,
+  updateTaskDescription,
 } from "@/app/actions";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
@@ -447,19 +448,44 @@ export function TaskProgressArea({
 }
 
 const FormSchema = z.object({
-  memo: z.string().max(1000, {
+  description: z.string().max(1000, {
     message: "1000文字以下で入力してください。",
   }),
 });
 
-export function TextFormArea({ preValue }: { preValue: string }) {
+export function TaskDescriptionArea({
+  projectSlug,
+  taskId,
+  description,
+}: {
+  projectSlug: string;
+  taskId: string;
+  description: string;
+}) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit() {
-    toast({ title: "メモを更新しました。" });
-  }
+  const onSubmit = async () => {
+    const { description } = form.getValues();
+    const errorCode = await updateTaskDescription(
+      projectSlug,
+      taskId,
+      description
+    );
+    if (errorCode) {
+      toast({
+        variant: "destructive",
+        title: "メモの更新に失敗しました。",
+        description: `何度も続く場合は管理者に連絡してください。(${errorCode})`,
+      });
+    } else {
+      toast({
+        title: "更新済み",
+        description: "タスクのメモを更新しました。",
+      });
+    }
+  };
 
   return (
     <Form {...form}>
@@ -469,14 +495,14 @@ export function TextFormArea({ preValue }: { preValue: string }) {
       >
         <FormField
           control={form.control}
-          name="memo"
+          name="description"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="ml-2">メモ</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="ここにメモを入力"
-                  defaultValue={preValue}
+                  defaultValue={description}
                   {...field}
                 />
               </FormControl>
@@ -484,7 +510,9 @@ export function TextFormArea({ preValue }: { preValue: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit">メモを更新</Button>
+        <Button type="submit" variant="secondary">
+          メモを更新
+        </Button>
       </form>
     </Form>
   );

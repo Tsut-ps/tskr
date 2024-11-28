@@ -246,3 +246,26 @@ export async function updateTaskProgress(
   const errorCode = error ? resStatus : undefined;
   return errorCode;
 }
+
+export async function updateTaskDescription(
+  projectSlug: string,
+  taskId: string,
+  description: string
+) {
+  const supabase = await createClient();
+
+  // エラーがなければ更新した1行のデータが返る
+  const { status: resStatus, error } = await supabase
+    .from("tasks")
+    .update({ description })
+    .eq("id", taskId)
+    .select()
+    .single();
+
+  error && console.error(error);
+  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+
+  // エラー時のみステータスコードを返す
+  const errorCode = error ? resStatus : undefined;
+  return errorCode;
+}
