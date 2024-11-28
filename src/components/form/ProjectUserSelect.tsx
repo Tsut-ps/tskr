@@ -88,9 +88,15 @@ export function ProjectUserSelect({
             aria-expanded={open}
             className="w-64 justify-between my-2"
           >
-            {mounted && selectedUserId
-              ? users.find((user) => user.id === selectedUserId)?.name
-              : "ユーザーを選択"}
+            {mounted && selectedUserId ? (
+              users.find((user) => user.id === selectedUserId)?.name || (
+                <span className="text-muted-foreground">
+                  (ユーザーが見つかりません)
+                </span>
+              )
+            ) : (
+              <span className="text-muted-foreground">(ユーザーを選択)</span>
+            )}
             <ChevronDown className="h-4 w-4 ml-1 opacity-50" />
           </Button>
         </PopoverTrigger>
