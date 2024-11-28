@@ -1,3 +1,6 @@
+import { format, parseISO } from "date-fns";
+import { ja } from "date-fns/locale";
+
 /** サーバーがUST使用時も日本時間の日付を取得 */
 const jstNowDate = new Date().toLocaleDateString("ja-JP", {
   timeZone: "Asia/Tokyo",
@@ -42,4 +45,23 @@ export const getDateColor = (dueDate: string) => {
   if (daysLeft <= 0) return "text-red-500";
   if (daysLeft <= 7) return "text-yellow-500";
   return "";
+};
+
+/** タスクの作成日時と更新日時をフォーマット */
+export const formatTaskDate = (createdAt: string, updatedAt: string) => {
+  const createdDate = parseISO(createdAt);
+  const updatedDate = parseISO(updatedAt);
+
+  // 同じ場合は更新がないと判定
+  const isSameDate = createdDate.getTime() === updatedDate.getTime();
+
+  const createdTime = format(createdDate, "PPP(E) HH:mm", {
+    locale: ja,
+  });
+
+  const updatedTime = format(updatedDate, "PPP(E) HH:mm", {
+    locale: ja,
+  });
+
+  return { createdTime, updatedTime, isSameDate };
 };

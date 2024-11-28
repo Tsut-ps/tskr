@@ -1,18 +1,17 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
+import { formatTaskDate } from "@/utils/date";
 
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Modal } from "./modal";
-import {
-  TaskTeamArea,
-  TaskTagArea,
-  TaskUserArea,
-  TaskStatusArea,
-  TaskProgressArea,
-  TaskDescriptionArea,
-} from "./form";
-import { DatePickerWithRange } from "./date-picker";
+import { TaskTeamSelect } from "@/components/form/TaskTeamSelect";
+import { TaskTagSelect } from "@/components/form/TaskTagSelect";
+import { DatePickerWithRange } from "@/components/form/DatePicker";
+import { TaskUserSelect } from "@/components/form/TaskUserSelect";
+import { TaskStatusSelect } from "@/components/form/TaskStatusSelect";
+import { TaskProgressSelect } from "@/components/form/TaskProgressSelect";
+import { TaskDescriptionForm } from "@/components/form/TaskDescriptionForm";
 
 export default async function Page({
   params,
@@ -47,21 +46,10 @@ export default async function Page({
 
   if (!project || !task) notFound();
 
-  const createdDate = new Date(task.created_at);
-  const updatedDate = new Date(task.updated_at);
-
-  // 同じ場合は更新がないと判定
-  const isSameDate = createdDate.getTime() === updatedDate.getTime();
-
-  // 月火水木金土日
-  const week = ["日", "月", "火", "水", "木", "金", "土"];
-
-  const createdTime = `${createdDate.getFullYear()}年${createdDate.getMonth()}月${createdDate.getDate()}日(${
-    week[createdDate.getDay()]
-  }) ${createdDate.getHours()}:${createdDate.getMinutes()}`;
-  const updatedTime = `${updatedDate.getFullYear()}年${updatedDate.getMonth()}月${updatedDate.getDate()}日(${
-    week[updatedDate.getDay()]
-  }) ${updatedDate.getHours()}:${updatedDate.getMinutes()}`;
+  const { createdTime, updatedTime, isSameDate } = formatTaskDate(
+    task.created_at,
+    task.updated_at
+  );
 
   return (
     <Modal
@@ -76,7 +64,7 @@ export default async function Page({
           <TableRow>
             <TableCell className="w-32 text-muted-foreground">チーム</TableCell>
             <TableCell>
-              <TaskTeamArea
+              <TaskTeamSelect
                 preValue={task.team!.id}
                 projectSlug={projectSlug}
                 taskId={task.id}
@@ -88,7 +76,7 @@ export default async function Page({
           <TableRow>
             <TableCell className="text-muted-foreground">タグ</TableCell>
             <TableCell>
-              <TaskTagArea
+              <TaskTagSelect
                 projectSlug={projectSlug}
                 taskId={task.id}
                 allTags={project.tags}
@@ -114,7 +102,7 @@ export default async function Page({
           <TableRow>
             <TableCell className="text-muted-foreground">担当者</TableCell>
             <TableCell>
-              <TaskUserArea
+              <TaskUserSelect
                 projectSlug={projectSlug}
                 taskId={task.id}
                 allUsers={project.users}
@@ -126,7 +114,7 @@ export default async function Page({
           <TableRow>
             <TableCell className="text-muted-foreground">ステータス</TableCell>
             <TableCell>
-              <TaskStatusArea
+              <TaskStatusSelect
                 projectSlug={projectSlug}
                 taskId={task.id}
                 status={task.status}
@@ -139,7 +127,7 @@ export default async function Page({
               大体の進捗率
             </TableCell>
             <TableCell className="flex items-center">
-              <TaskProgressArea
+              <TaskProgressSelect
                 projectSlug={projectSlug}
                 taskId={task.id}
                 progress={task.progress}
@@ -149,7 +137,7 @@ export default async function Page({
         </TableBody>
       </Table>
       <Separator className="!mb-6" />
-      <TaskDescriptionArea
+      <TaskDescriptionForm
         projectSlug={projectSlug}
         taskId={task.id}
         description={task.description as string}
