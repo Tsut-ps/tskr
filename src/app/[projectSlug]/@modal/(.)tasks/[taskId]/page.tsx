@@ -10,6 +10,7 @@ import {
   TaskTagArea,
   TextFormArea,
   TaskUserArea,
+  TaskStatusArea,
   TaskProgressArea,
 } from "./form";
 import { DatePickerWithRange } from "./date-picker";
@@ -133,7 +134,7 @@ export default async function Page({
           <TableRow>
             <TableCell className="text-muted-foreground">ステータス</TableCell>
             <TableCell>
-              <TaskProgressArea
+              <TaskStatusArea
                 projectSlug={projectSlug}
                 taskId={task.id}
                 status={task.status}

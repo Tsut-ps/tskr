@@ -345,7 +345,7 @@ export function TaskUserArea({
   );
 }
 
-export function TaskProgressArea({
+export function TaskStatusArea({
   projectSlug,
   taskId,
   status,
