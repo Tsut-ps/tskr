@@ -43,7 +43,7 @@ export default async function SettingProfilePage({
           ユーザー名は変更できません。変更したい場合、新しく作成してください。
         </p>
       </div>
-      <UserTeamSelect projectSlug={projectSlug} teams={teams || []} />
+      <UserTeamSelect teams={teams || []} />
     </div>
   );
 }
