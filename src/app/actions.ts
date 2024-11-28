@@ -74,11 +74,7 @@ export async function deleteTaskTag(
   return errorCode;
 }
 
-export async function createTaskTag(
-  projectSlug: string,
-  taskId: string,
-  tagName: string
-) {
+export async function createProjectTag(projectSlug: string, tagName: string) {
   const supabase = await createClient();
   const projectId = (await getProjectId(projectSlug)) as string;
 

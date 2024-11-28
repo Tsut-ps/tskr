@@ -9,7 +9,7 @@ import { Plus, X } from "lucide-react";
 import {
   updateTaskTeam,
   deleteTaskTag,
-  createTaskTag,
+  createProjectTag,
   addTaskTag,
 } from "@/app/actions";
 import { toast } from "@/hooks/use-toast";
@@ -131,9 +131,8 @@ export function TaskTagArea({
       });
       return;
     }
-    const { tagId, errorCode } = await createTaskTag(
+    const { tagId, errorCode } = await createProjectTag(
       projectSlug,
-      taskId,
       searchValue
     );
     if (errorCode || !tagId) {
