@@ -200,3 +200,26 @@ export async function addTaskUser(
   const errorCode = error ? status : undefined;
   return errorCode;
 }
+
+export async function updateTaskStatus(
+  projectSlug: string,
+  taskId: string,
+  taskStatus: string
+) {
+  const supabase = await createClient();
+
+  // エラーがなければ更新した1行のデータが返る
+  const { status: resStatus, error } = await supabase
+    .from("tasks")
+    .update({ status: taskStatus })
+    .eq("id", taskId)
+    .select()
+    .single();
+
+  error && console.error(error);
+  revalidatePath(`${projectSlug}/tasks/${taskId}`);
+
+  // エラー時のみステータスコードを返す
+  const errorCode = error ? resStatus : undefined;
+  return errorCode;
+}

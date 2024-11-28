@@ -5,7 +5,13 @@ import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Modal } from "./modal";
-import { TaskTeamArea, TaskTagArea, TextFormArea, TaskUserArea } from "./form";
+import {
+  TaskTeamArea,
+  TaskTagArea,
+  TextFormArea,
+  TaskUserArea,
+  TaskProgressArea,
+} from "./form";
 import { DatePickerWithRange } from "./date-picker";
 import {
   Select,
@@ -127,15 +133,11 @@ export default async function Page({
           <TableRow>
             <TableCell className="text-muted-foreground">ステータス</TableCell>
             <TableCell>
-              <Select defaultValue="open">
-                <SelectTrigger className="w-auto -my-2 -ml-3 border-transparent hover:bg-accent hover:text-accent-foreground">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={"open"}>進行中</SelectItem>
-                  <SelectItem value={"closed"}>完了</SelectItem>
-                </SelectContent>
-              </Select>
+              <TaskProgressArea
+                projectSlug={projectSlug}
+                taskId={task.id}
+                status={task.status}
+              />
             </TableCell>
           </TableRow>
 
