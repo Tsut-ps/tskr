@@ -161,6 +161,24 @@ export async function deleteTaskUser(
   return errorCode;
 }
 
+export async function createProjectUser(projectSlug: string, userName: string) {
+  const supabase = await createClient();
+  const projectId = (await getProjectId(projectSlug)) as string;
+
+  // エラーがなければ追加した1行のデータが返る
+  const { data, status, error } = await supabase
+    .from("users")
+    .insert({ project_id: projectId, name: userName })
+    .select()
+    .single();
+
+  const userId = data?.id;
+
+  error && console.error(error);
+  const errorCode = error ? status : undefined;
+  return { userId, errorCode };
+}
+
 export async function addTaskUser(
   projectSlug: string,
   taskId: string,

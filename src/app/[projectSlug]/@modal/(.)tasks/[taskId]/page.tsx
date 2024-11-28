@@ -1,13 +1,11 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import { Plus, X } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Modal } from "./modal";
-import { TaskTeamArea, TaskTagArea, TextFormArea } from "./form";
+import { TaskTeamArea, TaskTagArea, TextFormArea, TaskUserArea } from "./form";
 import { DatePickerWithRange } from "./date-picker";
 import {
   Select,
@@ -31,7 +29,7 @@ export default async function Page({
 
   const { data: project } = await supabase
     .from("projects")
-    .select("name, teams(id, name), tags(id, name)")
+    .select("name, teams(id, name), tags(id, name), users(id, name)")
     .eq("slug", projectSlug)
     .single();
 
@@ -117,19 +115,12 @@ export default async function Page({
           <TableRow>
             <TableCell className="text-muted-foreground">担当者</TableCell>
             <TableCell>
-              <div className="flex flex-wrap gap-1">
-                {task.users.length ? (
-                  task.users.map((user, index) => (
-                    <Badge key={index} variant="secondary">
-                      {user.name}
-                      <X size="16px" className="ml-1" />
-                    </Badge>
-                  ))
-                ) : (
-                  <span className="text-muted-foreground">(未割り当て)</span>
-                )}
-                <Plus size="20px" className="ml-1" />
-              </div>
+              <TaskUserArea
+                projectSlug={projectSlug}
+                taskId={task.id}
+                allUsers={project.users}
+                users={task.users}
+              />
             </TableCell>
           </TableRow>
 
