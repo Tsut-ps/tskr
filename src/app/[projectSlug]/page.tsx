@@ -7,6 +7,7 @@ import {
   CheckCircle,
   SquarePen,
   TriangleAlert,
+  Wrench,
 } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import {
@@ -41,7 +42,7 @@ export default async function Page({
     .from("projects")
     .select(
       `id, name, 
-        tasks(title, status, start_date, due_date, 
+        tasks(id, title, status, start_date, due_date, 
           tags(name), 
           teams(id, name))`
     )
@@ -164,7 +165,7 @@ export default async function Page({
               </CardDescription>
             </div>
             <Button asChild size="sm" className="ml-auto gap-1">
-              <Link href="#">
+              <Link href={`${slug}/tasks`}>
                 確認
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
@@ -179,8 +180,15 @@ export default async function Page({
             )
             .sort((a, b) => calcDaysLeft(a.due_date) - calcDaysLeft(b.due_date))
             .map((task, index) => (
-              <CardContent className="grid gap-6" key={index}>
-                <div className="flex items-center gap-4">
+              <Link
+                key={index}
+                href={`/${slug}/tasks/${task.id}`}
+                scroll={false}
+              >
+                <CardContent
+                  className="flex items-center gap-4 hover:opacity-80"
+                  key={index}
+                >
                   <div className="grid gap-1">
                     <p className="text-sm font-medium leading-none">
                       {task.title}
@@ -201,9 +209,9 @@ export default async function Page({
                         ? "(期限切れ)"
                         : `残り${calcDaysLeft(task.due_date)}日`
                     }
-                  </div>
                 </div>
               </CardContent>
+              </Link>
             ))}
         </Card>
         <Card x-chunk="dashboard-01-chunk-5">
@@ -215,13 +223,17 @@ export default async function Page({
               <CardDescription>所属チームでの絞り込み結果</CardDescription>
             </div>
             <Button asChild size="sm" className="ml-auto gap-1">
-              <Link href="#">
-                絞り込み
-                <ArrowUpRight className="h-4 w-4" />
+              <Link href={`/${slug}/settings/select-team/`}>
+                設定
+                <Wrench className="h-4 w-4" />
               </Link>
             </Button>
           </CardHeader>
-          <FilterTeamTasks tasks={project.tasks} users={users} />
+          <FilterTeamTasks
+            projectSlug={slug}
+            tasks={project.tasks}
+            users={users}
+          />
         </Card>
       </div>
     </main>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
@@ -10,6 +11,7 @@ import { CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 type Tasks = {
+  id: string;
   title: string;
   status: string;
   start_date: string;
@@ -31,9 +33,11 @@ const selectedUserIdAtom = atomWithStorage<string>("user", "", undefined, {
 });
 
 export const FilterTeamTasks = ({
+  projectSlug,
   tasks,
   users,
 }: {
+  projectSlug: string;
   tasks: Tasks;
   users: Users;
 }) => {
@@ -62,8 +66,15 @@ export const FilterTeamTasks = ({
         )
         .sort((a, b) => calcDaysLeft(a.due_date) - calcDaysLeft(b.due_date))
         .map((task, index) => (
-          <CardContent className="grid gap-6" key={index}>
-            <div className="flex items-center gap-4">
+          <Link
+            key={index}
+            href={`/${projectSlug}/tasks/${task.id}`}
+            scroll={false}
+          >
+            <CardContent
+              className="flex items-center gap-4 hover:opacity-80"
+              key={index}
+            >
               <div className="grid gap-1">
                 <p className="text-sm font-medium leading-none">{task.title}</p>
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
@@ -79,9 +90,9 @@ export const FilterTeamTasks = ({
                     ? "(期限切れ)"
                     : `残り${calcDaysLeft(task.due_date)}日`
                 }
-              </div>
             </div>
           </CardContent>
+          </Link>
         ))}
     </>
   );
