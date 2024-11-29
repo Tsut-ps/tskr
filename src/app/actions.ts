@@ -27,6 +27,23 @@ export async function getProjectId(slug: string) {
   return project?.id;
 }
 
+export async function createProject(name: string) {
+  const supabase = await createClient();
+
+  // エラーがなければ追加した1行のデータが返る
+  const { data, status, error } = await supabase
+    .from("projects")
+    .insert({ name })
+    .select()
+    .single();
+
+  const projectSlug = data?.slug;
+
+  error && console.error(error);
+  const errorCode = error ? status : undefined;
+  return { projectSlug, errorCode };
+}
+
 export async function createTask(
   projectSlug: string,
   teamId: string,

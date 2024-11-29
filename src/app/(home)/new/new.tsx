@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { createTask } from "@/app/actions";
+import { createProject } from "@/app/actions";
 import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -21,60 +21,53 @@ import {
 import { Modal } from "./modal";
 
 const formSchema = z.object({
-  taskName: z
+  projectName: z
     .string()
     .min(2, {
       message: "2文字以上で入力してください。",
     })
     .max(50, {
-      message: "50文字以内で入力してください。",
+      message: "20文字以内で入力してください。",
     }),
 });
 
-export function NewTask({
-  projectSlug,
-  teamId,
-}: {
-  projectSlug: string;
-  teamId: string;
-}) {
+export function NewProject() {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      taskName: "",
+      projectName: "",
     },
   });
 
-  const onSubmit = async ({ taskName }: z.infer<typeof formSchema>) => {
-    const { taskId, errorCode } = await createTask(
-      projectSlug,
-      teamId,
-      taskName
-    );
+  const onSubmit = async ({ projectName }: z.infer<typeof formSchema>) => {
+    const { projectSlug, errorCode } = await createProject(projectName);
     if (errorCode) {
       toast({
         title: "エラーが発生しました",
-        description: "タスクを作成できませんでした。",
+        description: "プロジェクトを作成できませんでした。",
       });
     }
     form.reset();
     setOpen(false);
-    router.push(`/${projectSlug}/tasks/${taskId}`);
+    router.push(`/${projectSlug}`);
   };
 
   return (
     <Modal open={open} onOpenChange={setOpen}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full space-y-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col w-full space-y-4"
+        >
           <FormField
             control={form.control}
-            name="taskName"
+            name="projectName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>タスク名</FormLabel>
+                <FormLabel>プロジェクト名</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -82,7 +75,7 @@ export function NewTask({
               </FormItem>
             )}
           />
-          <Button type="submit">タスクを作成</Button>
+          <Button type="submit">プロジェクトを作成</Button>
         </form>
       </Form>
     </Modal>
