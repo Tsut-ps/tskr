@@ -86,7 +86,7 @@ export function UserSelect({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-64 justify-between my-2"
+            className="w-64 justify-between"
           >
             {mounted && selectedUserId ? (
               users.find((user) => user.id === selectedUserId)?.name || (

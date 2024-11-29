@@ -7,8 +7,8 @@ const sidebarDefaultNavItems = [
     href: "/settings",
   },
   {
-    title: "アカウント",
-    href: "/settings/account",
+    title: "所属チーム",
+    href: "/settings/select-team",
   },
   {
     title: "通知",

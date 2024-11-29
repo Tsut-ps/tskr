@@ -52,39 +52,28 @@ export function UserTeamSelect({
   };
 
   return (
-    <div className="space-y-8">
-      <div>
-        <div>
-          <div className="mb-4">
-            <div className="text-base">所属チーム</div>
-            <div className="text-muted-foreground">
-              携わっているチームを選択すると、「全体」にて所属チームのタスクを確認できます。
-            </div>
-          </div>
-          {teams?.map((team, index) => (
-            <div
-              key={index}
-              className="flex flex-row items-center space-x-3 space-y-1"
-            >
-              <Checkbox
-                id={team.id}
-                checked={
-                  mounted &&
-                  userTeams?.some((userTeam) => userTeam.id === team.id)
-                }
-                onCheckedChange={(checked) => {
-                  checked
-                    ? handleAddUserTeam(team.id)
-                    : handleDeleteUserTeam(team.id);
-                }}
-              />
-              <label htmlFor={team.id} className="font-normal">
-                {team.name}
-              </label>
-            </div>
-          ))}
+    <div>
+      {teams?.map((team, index) => (
+        <div
+          key={index}
+          className="flex flex-row items-center space-x-3 space-y-1"
+        >
+          <Checkbox
+            id={team.id}
+            checked={
+              mounted && userTeams?.some((userTeam) => userTeam.id === team.id)
+            }
+            onCheckedChange={(checked) => {
+              checked
+                ? handleAddUserTeam(team.id)
+                : handleDeleteUserTeam(team.id);
+            }}
+          />
+          <label htmlFor={team.id} className="font-normal">
+            {team.name}
+          </label>
         </div>
-      </div>
+      ))}
     </div>
   );
 }

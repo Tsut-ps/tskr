@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 
-import { UserSelect } from "@/components/form/UserSelect";
+import { UserTeamSelect } from "@/components/form/UserTeamSelect";
 
 export default async function SettingProfilePage({
   params,
@@ -20,16 +20,18 @@ export default async function SettingProfilePage({
 
   if (!project) notFound();
 
+  const { data: teams } = await supabase
+    .from("teams")
+    .select("id, name, users(id)")
+    .eq("project_id", project.id);
+
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-medium">ユーザー名</h3>
+      <h3 className="text-lg font-medium">所属チーム</h3>
       <p className="text-muted-foreground">
-        所属チームなどの判定に用います。
+        携わっているチームを選択すると、「全体」にて所属チームのタスクを確認できます。
       </p>
-      <UserSelect projectSlug={projectSlug} users={project.users} />
-      <p className="text-sm text-muted-foreground">
-        悪用を防ぐため、各ユーザーの名前は変更できません。変更したい場合、新しく作成してください。
-      </p>
+      <UserTeamSelect teams={teams || []} />
     </div>
   );
 }
