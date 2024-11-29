@@ -26,6 +26,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { FilterTeamTasks } from "@/components/FilterTeamTasks";
 
 export default async function Page({
   params,
@@ -39,15 +40,20 @@ export default async function Page({
   const { data: project } = await supabase
     .from("projects")
     .select(
-      `name, 
+      `id, name, 
         tasks(title, status, start_date, due_date, 
           tags(name), 
-          teams(name))`
+          teams(id, name))`
     )
     .eq("slug", slug)
     .single();
 
   if (!project) notFound();
+
+  const { data: users } = await supabase
+    .from("users")
+    .select("id, teams(id)")
+    .eq("project_id", project.id);
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-6 md:py-8 max-w-screen-xl">
@@ -206,7 +212,7 @@ export default async function Page({
               <CardTitle className="text-xl font-medium">
                 関係あるタスク
               </CardTitle>
-              <CardDescription>「音源班」での絞り込み結果</CardDescription>
+              <CardDescription>所属チームでの絞り込み結果</CardDescription>
             </div>
             <Button asChild size="sm" className="ml-auto gap-1">
               <Link href="#">
@@ -215,40 +221,7 @@ export default async function Page({
               </Link>
             </Button>
           </CardHeader>
-          {project
-            .tasks!.filter(
-              (task) =>
-                // 関係あるタスクの絞り込み
-                task.teams?.name === "音源班"
-            )
-            .sort((a, b) => calcDaysLeft(a.due_date) - calcDaysLeft(b.due_date))
-            .map((task, index) => (
-              <CardContent className="grid gap-6" key={index}>
-                <div className="flex items-center gap-4">
-                  <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none">
-                      {task.title}
-                    </p>
-                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                      <p>{task.teams?.name}</p>
-                      <Separator
-                        className="bg-zinc-700"
-                        orientation="vertical"
-                      />
-                      <p>{task.tags?.map((tag) => `#${tag.name} `)}</p>
-                    </div>
-                  </div>
-                  <div className={cn("ml-auto", getDateColor(task.due_date))}>
-                    {
-                      // 残り日数が0日未満の場合は「(期限切れ)」と表示
-                      calcDaysLeft(task.due_date) < 0
-                        ? "(期限切れ)"
-                        : `残り${calcDaysLeft(task.due_date)}日`
-                    }
-                  </div>
-                </div>
-              </CardContent>
-            ))}
+          <FilterTeamTasks tasks={project.tasks} users={users} />
         </Card>
       </div>
     </main>
