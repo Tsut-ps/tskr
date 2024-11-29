@@ -95,7 +95,7 @@ export function TaskUserSelect({
     <div className="flex flex-wrap items-center gap-1">
       {users.length ? (
         users?.map((user, index) => (
-          <Badge key={index} variant="secondary">
+          <Badge key={index} variant="outline">
             {user.name}
             <X
               size="16px"
