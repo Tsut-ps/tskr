@@ -27,7 +27,7 @@ export default async function Page({
     .select(
       `name, 
         teams(id, name, 
-          tasks(id, title, start_date, due_date, status,
+          tasks(id, title, start_date, due_date, status, description,
             tags(name)))`
     )
     .eq("slug", projectSlug)
@@ -64,8 +64,8 @@ export default async function Page({
                           <p className="text-sm font-medium leading-none pt-1">
                             {task.title}
                           </p>
-                          <p className="text-sm text-muted-foreground">
-                            {task.start_date}→{task.due_date}
+                          <p className="text-sm text-muted-foreground truncate">
+                            {task.description}
                           </p>
                           <div className="flex flex-wrap gap-1 pt-1">
                             {task.tags?.map((tag, index) => (
@@ -78,7 +78,7 @@ export default async function Page({
                         {
                           <div
                             className={cn(
-                              "ml-auto",
+                              "ml-auto whitespace-nowrap",
                               getDateColor(task.due_date, task.status)
                             )}
                           >
