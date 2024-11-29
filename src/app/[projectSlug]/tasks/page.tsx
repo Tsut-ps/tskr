@@ -10,9 +10,8 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { NewTask } from "./new";
 
 export default async function Page({
   params,
@@ -27,7 +26,7 @@ export default async function Page({
     .from("projects")
     .select(
       `name, 
-        teams(name, 
+        teams(id, name, 
           tasks(id, title, start_date, due_date, 
             tags(name)))`
     )
@@ -40,17 +39,12 @@ export default async function Page({
     <main className="flex gap-4 p-4 md:gap-6 md:py-8 overflow-x-auto w-full h-[calc(100svh-4rem)] shadcn-scrollbar">
       {project.teams?.map((team, index) => (
         <div key={index} className="w-96 flex-none">
-          <div className="flex flex-row items-center p-3">
+          <div className="flex flex-row items-center justify-between p-3">
             <div className="grid gap-1">
               <CardTitle className="text-xl font-medium">{team.name}</CardTitle>
               <CardDescription>{team.tasks?.length}件のタスク</CardDescription>
             </div>
-            <Button asChild size="sm" className="ml-auto gap-1">
-              <Link href="#">
-                新規
-                <Plus className="h-4 w-4" />
-              </Link>
-            </Button>
+            <NewTask projectSlug={projectSlug} teamId={team.id} />
           </div>
           <div className="grid gap-2">
             {team.tasks?.map((task, index) => (

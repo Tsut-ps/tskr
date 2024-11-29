@@ -166,11 +166,11 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
-          due_date: string
+          due_date?: string
           id?: string
           progress?: number
           project_id: string
-          start_date: string
+          start_date?: string
           status?: string
           team_id: string
           title: string

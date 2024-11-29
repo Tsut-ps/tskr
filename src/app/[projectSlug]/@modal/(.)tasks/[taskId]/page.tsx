@@ -113,10 +113,7 @@ export default async function Page({
           <TableRow>
             <TableCell className="text-muted-foreground">ステータス</TableCell>
             <TableCell>
-              <TaskStatusSelect
-                taskId={task.id}
-                status={task.status}
-              />
+              <TaskStatusSelect taskId={task.id} status={task.status} />
             </TableCell>
           </TableRow>
 
@@ -125,10 +122,7 @@ export default async function Page({
               大体の進捗率
             </TableCell>
             <TableCell className="flex items-center">
-              <TaskProgressSelect
-                taskId={task.id}
-                progress={task.progress}
-              />
+              <TaskProgressSelect taskId={task.id} progress={task.progress} />
             </TableCell>
           </TableRow>
         </TableBody>
