@@ -42,7 +42,7 @@ export default async function Page({
     .from("projects")
     .select(
       `id, name, 
-        tasks(id, title, status, start_date, due_date, 
+        tasks(id, title, status, start_date, due_date,
           tags(name), 
           teams(id, name))`
     )
@@ -199,7 +199,9 @@ export default async function Page({
                         className="bg-zinc-700"
                         orientation="vertical"
                       />
-                      <p>{task.tags?.map((tag) => `#${tag.name} `)}</p>
+                      {task.tags?.map((tag, index) => (
+                        <span key={index}>#{tag.name}</span>
+                      ))}
                     </div>
                   </div>
                   <div

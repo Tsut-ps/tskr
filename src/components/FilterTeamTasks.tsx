@@ -82,12 +82,14 @@ export const FilterTeamTasks = ({
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                   <p>{task.teams?.name}</p>
                   <Separator className="bg-zinc-700" orientation="vertical" />
-                  <p>{task.tags?.map((tag) => `#${tag.name} `)}</p>
+                  {task.tags?.map((tag, index) => (
+                    <span key={index}>#{tag.name}</span>
+                  ))}
                 </div>
               </div>
               <div
                 className={cn(
-                  "ml-auto",
+                  "ml-auto whitespace-nowrap",
                   getDateColor(task.due_date, task.status)
                 )}
               >

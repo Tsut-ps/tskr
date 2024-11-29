@@ -70,7 +70,7 @@ export default async function Page({
                           <div className="flex flex-wrap gap-1 pt-1">
                             {task.tags?.map((tag, index) => (
                               <Badge key={index} variant="secondary">
-                                {tag.name}
+                                #{tag.name}
                               </Badge>
                             ))}
                           </div>
