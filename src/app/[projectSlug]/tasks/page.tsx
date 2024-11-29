@@ -27,7 +27,7 @@ export default async function Page({
     .select(
       `name, 
         teams(id, name, 
-          tasks(id, title, start_date, due_date, 
+          tasks(id, title, start_date, due_date, status,
             tags(name)))`
     )
     .eq("slug", projectSlug)
@@ -79,15 +79,15 @@ export default async function Page({
                           <div
                             className={cn(
                               "ml-auto",
-                              getDateColor(task.due_date)
+                              getDateColor(task.due_date, task.status)
                             )}
                           >
-                            {
-                              // 残り日数が0日未満の場合は「(期限切れ)」と表示
+                            {task.status === "closed"
+                              ? "完了"
+                              : // 残り日数が0日未満の場合は「(期限切れ)」と表示
                               calcDaysLeft(task.due_date) < 0
-                                ? "(期限切れ)"
-                                : `残り${calcDaysLeft(task.due_date)}日`
-                            }
+                              ? "期限切れ"
+                              : `残り${calcDaysLeft(task.due_date)}日`}
                           </div>
                         }
                       </div>

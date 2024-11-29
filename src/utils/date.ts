@@ -26,7 +26,7 @@ export const isExpiredTask = (dueDate: string) => {
 };
 
 /** 完了したタスクかを判定 */
-export const isCompletedTask = (status: string) => status === "completed";
+export const isCompletedTask = (status: string) => status === "closed";
 
 /** 期限切れまでの日数を計算 */
 export const calcDaysLeft = (dueDate: string) => {
@@ -40,8 +40,9 @@ export const calcDaysLeft = (dueDate: string) => {
 };
 
 /** 期限切れまでの日数に応じて文字色を変更 */
-export const getDateColor = (dueDate: string) => {
+export const getDateColor = (dueDate: string, status?: string) => {
   const daysLeft = calcDaysLeft(dueDate);
+  if (status === "closed") return "text-green-600";
   if (daysLeft <= 0) return "text-red-500";
   if (daysLeft <= 7) return "text-yellow-500";
   return "";

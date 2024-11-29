@@ -202,15 +202,20 @@ export default async function Page({
                       <p>{task.tags?.map((tag) => `#${tag.name} `)}</p>
                     </div>
                   </div>
-                  <div className={cn("ml-auto", getDateColor(task.due_date))}>
+                  <div
+                    className={cn(
+                      "ml-auto",
+                      getDateColor(task.due_date, task.status)
+                    )}
+                  >
                     {
                       // 残り日数が0日未満の場合は「(期限切れ)」と表示
                       calcDaysLeft(task.due_date) < 0
-                        ? "(期限切れ)"
+                        ? "期限切れ"
                         : `残り${calcDaysLeft(task.due_date)}日`
                     }
-                </div>
-              </CardContent>
+                  </div>
+                </CardContent>
               </Link>
             ))}
         </Card>

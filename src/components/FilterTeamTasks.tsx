@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { cn } from "@/lib/utils";
-import { calcDaysLeft, getDateColor } from "@/utils/date";
+import { isCompletedTask, calcDaysLeft, getDateColor } from "@/utils/date";
 
 import { CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -60,9 +60,11 @@ export const FilterTeamTasks = ({
   return (
     <>
       {tasks
-        .filter((task) =>
-          // 関係あるタスクの絞り込み
-          userTeams?.some((team) => task.teams?.id === team.id)
+        .filter(
+          (task) =>
+            // 未完了のタスクかつユーザーが所属するチームのタスクのみ表示
+            !isCompletedTask(task.status) &&
+            userTeams?.some((team) => task.teams?.id === team.id)
         )
         .sort((a, b) => calcDaysLeft(a.due_date) - calcDaysLeft(b.due_date))
         .map((task, index) => (
@@ -83,15 +85,20 @@ export const FilterTeamTasks = ({
                   <p>{task.tags?.map((tag) => `#${tag.name} `)}</p>
                 </div>
               </div>
-              <div className={cn("ml-auto", getDateColor(task.due_date))}>
+              <div
+                className={cn(
+                  "ml-auto",
+                  getDateColor(task.due_date, task.status)
+                )}
+              >
                 {
                   // 残り日数が0日未満の場合は「(期限切れ)」と表示
                   calcDaysLeft(task.due_date) < 0
-                    ? "(期限切れ)"
+                    ? "期限切れ"
                     : `残り${calcDaysLeft(task.due_date)}日`
                 }
-            </div>
-          </CardContent>
+              </div>
+            </CardContent>
           </Link>
         ))}
     </>
