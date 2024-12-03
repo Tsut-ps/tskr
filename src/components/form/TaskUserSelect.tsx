@@ -117,7 +117,7 @@ export function TaskUserSelect({
         <span className="text-red-500">(未割り当て)</span>
       )}
 
-      <Popover>
+      <Popover modal={true}>
         <PopoverTrigger asChild>
           <Plus size="20px" className="ml-1" />
         </PopoverTrigger>

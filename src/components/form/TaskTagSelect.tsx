@@ -3,11 +3,7 @@
 import { useState } from "react";
 import { Plus, X } from "lucide-react";
 
-import {
-  deleteTaskTag,
-  createProjectTag,
-  addTaskTag,
-} from "@/app/actions";
+import { deleteTaskTag, createProjectTag, addTaskTag } from "@/app/actions";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -23,7 +19,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function TaskTagSelect({
   projectSlug,
@@ -108,7 +103,7 @@ export function TaskTagSelect({
         </Badge>
       ))}
 
-      <Popover>
+      <Popover modal={true}>
         <PopoverTrigger asChild>
           <Plus size="20px" className="ml-1" />
         </PopoverTrigger>
@@ -119,7 +114,7 @@ export function TaskTagSelect({
               value={searchValue}
               onValueChange={setSearchValue}
             />
-            <CommandList>
+            <CommandList className="shadcn-scrollbar">
               <CommandEmpty
                 className="py-6 text-center text-sm hover:opacity-50 cursor-pointer"
                 onClick={() => handleCreateNewTag()}
@@ -127,17 +122,15 @@ export function TaskTagSelect({
                 タグを追加
               </CommandEmpty>
               <CommandGroup>
-                <ScrollArea className="h-[200px]">
-                  {allTags?.map((tag, index) => (
-                    <CommandItem
-                      key={index}
-                      value={tag.name}
-                      onSelect={() => handleAddTaskTag(tag.id)}
-                    >
-                      {tag.name}
-                    </CommandItem>
-                  ))}
-                </ScrollArea>
+                {allTags?.map((tag, index) => (
+                  <CommandItem
+                    key={index}
+                    value={tag.name}
+                    onSelect={() => handleAddTaskTag(tag.id)}
+                  >
+                    {tag.name}
+                  </CommandItem>
+                ))}
               </CommandGroup>
             </CommandList>
           </Command>
