@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Plus } from "lucide-react";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { createProjectUser } from "@/app/actions";
@@ -11,10 +11,10 @@ import {
   Command,
   CommandInput,
   CommandList,
-  CommandEmpty,
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
+import { Separator } from "@/components/ui/separator";
 import {
   Popover,
   PopoverContent,
@@ -78,6 +78,10 @@ export function UserSelect({
     });
   };
 
+  const isUserNameExists = users.some(
+    (user) => user.name === searchValue.trim()
+  );
+
   return (
     <>
       <Popover open={open} onOpenChange={setOpen}>
@@ -95,7 +99,9 @@ export function UserSelect({
                 </span>
               )
             ) : (
-              <span className="text-muted-foreground">(ユーザーを選択)</span>
+              <span className="text-muted-foreground">
+                (ユーザーを選択/追加)
+              </span>
             )}
             <ChevronDown className="h-4 w-4 ml-1 opacity-50" />
           </Button>
@@ -103,17 +109,11 @@ export function UserSelect({
         <PopoverContent className="w-64 p-0">
           <Command>
             <CommandInput
-              placeholder="ユーザーを検索"
+              placeholder="ユーザーを検索/追加"
               value={searchValue}
               onValueChange={setSearchValue}
             />
             <CommandList>
-              <CommandEmpty
-                className="py-6 text-center text-sm hover:opacity-50 cursor-pointer"
-                onClick={() => handleCreateNewUser()}
-              >
-                ユーザーを追加
-              </CommandEmpty>
               <CommandGroup>
                 {users.map((user, index) => (
                   <CommandItem
@@ -132,6 +132,19 @@ export function UserSelect({
                   </CommandItem>
                 ))}
               </CommandGroup>
+              <Separator />
+              {searchValue && !isUserNameExists && (
+                <CommandGroup>
+                  <CommandItem
+                    className="py-4"
+                    value={searchValue}
+                    onSelect={handleCreateNewUser}
+                  >
+                    <Plus size="20px" className="mr-2" />
+                    {searchValue} を追加
+                  </CommandItem>
+                </CommandGroup>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>

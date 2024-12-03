@@ -8,7 +8,6 @@ import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -19,7 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 export function TaskUserSelect({
   projectSlug,
@@ -91,6 +90,10 @@ export function TaskUserSelect({
     }
   };
 
+  const isUserNameExists = allUsers.some(
+    (user) => user.name === searchValue.trim()
+  );
+
   return (
     <div className="flex flex-wrap items-center gap-1">
       {users.length ? (
@@ -112,20 +115,14 @@ export function TaskUserSelect({
         <PopoverTrigger asChild>
           <Plus size="20px" className="ml-1" />
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
+        <PopoverContent className="w-[240px] p-0">
           <Command>
             <CommandInput
               placeholder="ユーザーを検索/追加"
               value={searchValue}
               onValueChange={setSearchValue}
             />
-            <CommandList>
-              <CommandEmpty
-                className="py-6 text-center text-sm hover:opacity-50 cursor-pointer"
-                onClick={() => handleCreateNewUser()}
-              >
-                ユーザーを追加
-              </CommandEmpty>
+            <CommandList className="shadcn-scrollbar">
               <CommandGroup>
                 <ScrollArea className="h-[200px]">
                   {allUsers?.map((user, index) => (
@@ -137,8 +134,20 @@ export function TaskUserSelect({
                       {user.name}
                     </CommandItem>
                   ))}
-                </ScrollArea>
               </CommandGroup>
+              <Separator />
+              {searchValue && !isUserNameExists && (
+                <CommandGroup>
+                  <CommandItem
+                    className="py-4"
+                    value={searchValue}
+                    onSelect={handleCreateNewUser}
+                  >
+                    <Plus size="20px" className="mr-2" />
+                    {searchValue} を追加
+                  </CommandItem>
+                </CommandGroup>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>
