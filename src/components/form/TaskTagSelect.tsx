@@ -14,6 +14,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Separator } from "@/components/ui/separator";
 import {
   Popover,
   PopoverContent,
@@ -24,12 +25,12 @@ export function TaskTagSelect({
   projectSlug,
   taskId,
   allTags,
-  tags,
+  assignedTags,
 }: {
   projectSlug: string;
   taskId: string;
   allTags: { id: string; name: string }[];
-  tags: { id: string; name: string }[];
+  assignedTags: { id: string; name: string }[];
 }) {
   const [searchValue, setSearchValue] = useState("");
 
@@ -90,9 +91,17 @@ export function TaskTagSelect({
     }
   };
 
+  const isTagNameExists = allTags.some(
+    (tag) => tag.name === searchValue.trim()
+  );
+
+  const isTagAssigned = (targetTagId: string) => {
+    return assignedTags.some((tag) => tag.id === targetTagId);
+  };
+
   return (
     <div className="flex flex-wrap items-center gap-1">
-      {tags?.map((tag, index) => (
+      {assignedTags?.map((tag, index) => (
         <Badge key={index} variant="secondary">
           {tag.name}
           <X
@@ -107,7 +116,7 @@ export function TaskTagSelect({
         <PopoverTrigger asChild>
           <Plus size="20px" className="ml-1" />
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
+        <PopoverContent className="w-[240px] p-0">
           <Command>
             <CommandInput
               placeholder="タグを検索/追加"
@@ -126,12 +135,26 @@ export function TaskTagSelect({
                   <CommandItem
                     key={index}
                     value={tag.name}
+                    disabled={isTagAssigned(tag.id)}
                     onSelect={() => handleAddTaskTag(tag.id)}
                   >
                     {tag.name}
                   </CommandItem>
                 ))}
               </CommandGroup>
+              <Separator />
+              {searchValue && !isTagNameExists && (
+                <CommandGroup>
+                  <CommandItem
+                    className="py-4"
+                    value={searchValue}
+                    onSelect={handleCreateNewTag}
+                  >
+                    <Plus size="20px" className="mr-2" />
+                    {searchValue} を追加
+                  </CommandItem>
+                </CommandGroup>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>

@@ -79,7 +79,7 @@ export default async function Page({
                 projectSlug={projectSlug}
                 taskId={task.id}
                 allTags={project.tags}
-                tags={task.tags}
+                assignedTags={task.tags}
               />
             </TableCell>
           </TableRow>
