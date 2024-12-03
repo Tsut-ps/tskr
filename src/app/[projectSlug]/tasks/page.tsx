@@ -11,7 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { NewTask } from "./new";
+import { NewTask, NewTeam } from "./new";
 
 export default async function Page({
   params,
@@ -105,6 +105,7 @@ export default async function Page({
           </div>
         </div>
       ))}
+      <NewTeam projectSlug={projectSlug} />
     </main>
   );
 }

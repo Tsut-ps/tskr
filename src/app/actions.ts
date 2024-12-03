@@ -46,6 +46,26 @@ export async function createProject(name: string) {
   return { projectSlug, errorCode };
 }
 
+export async function createTeam(projectSlug: string, name: string) {
+  const supabase = await createClient();
+  const projectId = (await getProjectId(projectSlug)) as string;
+
+  // エラーがなければ追加した1行のデータが返る
+  const { data, status, error } = await supabase
+    .from("teams")
+    .insert({ project_id: projectId, name })
+    .select()
+    .single();
+
+  const teamId = data?.id;
+
+  error && console.error(error);
+  revalidatePath("/[projectSlug]/tasks/", "page");
+
+  const errorCode = error ? status : undefined;
+  return { teamId, errorCode };
+}
+
 export async function createTask(
   projectSlug: string,
   teamId: string,
