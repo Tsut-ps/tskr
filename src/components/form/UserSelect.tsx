@@ -113,7 +113,7 @@ export function UserSelect({
               value={searchValue}
               onValueChange={setSearchValue}
             />
-            <CommandList>
+            <CommandList className="shadcn-scrollbar">
               <CommandGroup>
                 {users.map((user, index) => (
                   <CommandItem
