@@ -46,7 +46,8 @@ export function NewProject() {
     const { projectSlug, errorCode } = await createProject(projectName);
     if (errorCode) {
       toast({
-        title: "エラーが発生しました",
+        variant: "destructive",
+        title: "エラーが発生しました。",
         description: "プロジェクトを作成できませんでした。",
       });
     }

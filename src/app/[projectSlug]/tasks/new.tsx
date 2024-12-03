@@ -56,7 +56,8 @@ export function NewTask({
     );
     if (errorCode) {
       toast({
-        title: "エラーが発生しました",
+        variant: "destructive",
+        title: "エラーが発生しました。",
         description: "タスクを作成できませんでした。",
       });
     }
