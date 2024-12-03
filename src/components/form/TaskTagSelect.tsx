@@ -8,7 +8,6 @@ import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -124,12 +123,6 @@ export function TaskTagSelect({
               onValueChange={setSearchValue}
             />
             <CommandList className="shadcn-scrollbar">
-              <CommandEmpty
-                className="py-6 text-center text-sm hover:opacity-50 cursor-pointer"
-                onClick={() => handleCreateNewTag()}
-              >
-                タグを追加
-              </CommandEmpty>
               <CommandGroup>
                 {allTags?.map((tag, index) => (
                   <CommandItem
