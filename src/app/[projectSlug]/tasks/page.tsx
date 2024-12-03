@@ -36,7 +36,7 @@ export default async function Page({
   if (!project) notFound();
 
   return (
-    <main className="flex gap-4 p-4 md:gap-6 md:py-8 overflow-x-auto w-full h-[calc(100svh-4rem)] shadcn-scrollbar">
+    <main className="flex gap-4 p-4 md:gap-6 md:py-6 overflow-x-auto w-full h-[calc(100svh-4rem)] shadcn-scrollbar">
       {project.teams?.map((team, index) => (
         <div key={index} className="w-96 flex-none">
           <div className="flex flex-row items-center justify-between p-3">
@@ -46,7 +46,7 @@ export default async function Page({
             </div>
             <NewTask projectSlug={projectSlug} teamId={team.id} />
           </div>
-          <div className="grid gap-2">
+          <div className="grid gap-2 pb-8">
             {team.tasks
               ?.sort((a, b) => {
                 if (isCompletedTask(a.status) && !isCompletedTask(b.status))
