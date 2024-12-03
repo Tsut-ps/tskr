@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/server";
-import { calcDaysLeft, getDateColor } from "@/utils/date";
+import { calcDaysLeft, getDateColor, isCompletedTask } from "@/utils/date";
 
 import {
   Card,
@@ -48,16 +48,23 @@ export default async function Page({
           </div>
           <div className="grid gap-2">
             {team.tasks
-              ?.sort(
-                (a, b) => calcDaysLeft(a.due_date) - calcDaysLeft(b.due_date)
-              )
+              ?.sort((a, b) => {
+                if (isCompletedTask(a.status) && !isCompletedTask(b.status))
+                  return 1;
+                if (!isCompletedTask(a.status) && isCompletedTask(b.status))
+                  return -1;
+                return calcDaysLeft(a.due_date) - calcDaysLeft(b.due_date);
+              })
               .map((task, index) => (
                 <Link
                   key={index}
                   href={`/${projectSlug}/tasks/${task.id}`}
                   scroll={false}
                 >
-                  <Card key={index}>
+                  <Card
+                    key={index}
+                    className={cn(isCompletedTask(task.status) && "opacity-60")}
+                  >
                     <CardContent className="p-5">
                       <div className="flex items-center gap-4">
                         <div className="grid gap-2">
