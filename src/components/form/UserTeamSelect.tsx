@@ -1,12 +1,16 @@
 "use client";
 
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import { AlertCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { addUserTeam, deleteUserTeam } from "@/app/actions";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // ユーザーを記録するアトム
 const selectedUserIdAtom = atomWithStorage<string>("user", "", undefined, {
@@ -18,6 +22,7 @@ export function UserTeamSelect({
 }: {
   teams: { id: string; name: string; users: { id: string }[] }[];
 }) {
+  const { projectSlug } = useParams();
   const [userId] = useAtom(selectedUserIdAtom);
   const [mounted, setMounted] = useState(false);
   const userTeams = teams?.filter((team) =>
@@ -53,13 +58,25 @@ export function UserTeamSelect({
 
   return (
     <div>
+      {mounted && !userId && (
+        <Link href={`/${projectSlug}/settings`} className="hover:opacity-80">
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>ユーザーが選択されていません。</AlertTitle>
+            <AlertDescription>
+              プロフィールでユーザーを選択してください。
+            </AlertDescription>
+          </Alert>
+        </Link>
+      )}
       {teams?.map((team, index) => (
         <div
           key={index}
-          className="flex flex-row items-center space-x-3 space-y-1"
+          className="flex flex-row items-center space-x-2 space-y-1"
         >
           <Checkbox
             id={team.id}
+            disabled={!mounted || !userId}
             checked={
               mounted && userTeams?.some((userTeam) => userTeam.id === team.id)
             }
@@ -69,7 +86,10 @@ export function UserTeamSelect({
                 : handleDeleteUserTeam(team.id);
             }}
           />
-          <label htmlFor={team.id} className="font-normal">
+          <label
+            htmlFor={team.id}
+            className="font-normal peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
             {team.name}
           </label>
         </div>
