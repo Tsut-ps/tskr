@@ -98,8 +98,6 @@ export function TaskUserSelect({
     return assignedUsers.some((user) => user.id === targetUserId);
   };
 
-  const unassignedUsers = allUsers.filter((user) => !isUserAssigned(user.id));
-
   return (
     <div className="flex flex-wrap items-center gap-1">
       {assignedUsers.length ? (
@@ -130,10 +128,11 @@ export function TaskUserSelect({
             />
             <CommandList className="shadcn-scrollbar">
               <CommandGroup>
-                {unassignedUsers?.map((user, index) => (
+                {allUsers?.map((user, index) => (
                   <CommandItem
                     key={index}
                     value={user.name}
+                    disabled={isUserAssigned(user.id)}
                     onSelect={() => handleAddTaskUser(user.id)}
                   >
                     {user.name}
