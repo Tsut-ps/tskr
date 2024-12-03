@@ -24,12 +24,12 @@ export function TaskUserSelect({
   projectSlug,
   taskId,
   allUsers,
-  users,
+  assignedUsers,
 }: {
   projectSlug: string;
   taskId: string;
   allUsers: { id: string; name: string }[];
-  users: { id: string; name: string }[];
+  assignedUsers: { id: string; name: string }[];
 }) {
   const [searchValue, setSearchValue] = useState("");
 
@@ -94,10 +94,16 @@ export function TaskUserSelect({
     (user) => user.name === searchValue.trim()
   );
 
+  const isUserAssigned = (targetUserId: string) => {
+    return assignedUsers.some((user) => user.id === targetUserId);
+  };
+
+  const unassignedUsers = allUsers.filter((user) => !isUserAssigned(user.id));
+
   return (
     <div className="flex flex-wrap items-center gap-1">
-      {users.length ? (
-        users?.map((user, index) => (
+      {assignedUsers.length ? (
+        assignedUsers?.map((user, index) => (
           <Badge key={index} variant="outline">
             {user.name}
             <X
@@ -124,16 +130,15 @@ export function TaskUserSelect({
             />
             <CommandList className="shadcn-scrollbar">
               <CommandGroup>
-                <ScrollArea className="h-[200px]">
-                  {allUsers?.map((user, index) => (
-                    <CommandItem
-                      key={index}
-                      value={user.name}
-                      onSelect={() => handleAddTaskUser(user.id)}
-                    >
-                      {user.name}
-                    </CommandItem>
-                  ))}
+                {unassignedUsers?.map((user, index) => (
+                  <CommandItem
+                    key={index}
+                    value={user.name}
+                    onSelect={() => handleAddTaskUser(user.id)}
+                  >
+                    {user.name}
+                  </CommandItem>
+                ))}
               </CommandGroup>
               <Separator />
               {searchValue && !isUserNameExists && (

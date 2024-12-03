@@ -136,7 +136,7 @@ export default async function Page({
                   projectSlug={projectSlug}
                   taskId={task.id}
                   allUsers={project.users}
-                  users={task.users}
+                  assignedUsers={task.users}
                 />
               </TableCell>
             </TableRow>
