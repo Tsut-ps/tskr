@@ -40,6 +40,8 @@ export async function createProject(name: string) {
   const projectSlug = data?.slug;
 
   error && console.error(error);
+  revalidatePath("/[projectSlug]/tasks/", "page");
+
   const errorCode = error ? status : undefined;
   return { projectSlug, errorCode };
 }
@@ -62,6 +64,8 @@ export async function createTask(
   const taskId = data?.id;
 
   error && console.error(error);
+  revalidatePath("/[projectSlug]/tasks/[taskId]", "page");
+
   const errorCode = error ? status : undefined;
   return { taskId, errorCode };
 }
@@ -79,7 +83,7 @@ export async function updateTaskTeam(taskId: string, teamId: string) {
     .single();
 
   error && console.error(error);
-  revalidatePath("/[projectSlug]/task/[taskId]", "page");
+  revalidatePath("/[projectSlug]/tasks/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
@@ -98,7 +102,7 @@ export async function deleteTaskTag(taskId: string, tagId: string) {
     .single();
 
   error && console.error(error);
-  revalidatePath("/[projectSlug]/task/[taskId]", "page");
+  revalidatePath("/[projectSlug]/tasks/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
@@ -134,7 +138,7 @@ export async function addTaskTag(taskId: string, tagId: string) {
     .single();
 
   error && console.error(error);
-  revalidatePath("/[projectSlug]/task/[taskId]", "page");
+  revalidatePath("/[projectSlug]/tasks/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
@@ -157,7 +161,7 @@ export async function updateTaskDate(
     .single();
 
   error && console.error(error);
-  revalidatePath("/[projectSlug]/task/[taskId]", "page");
+  revalidatePath("/[projectSlug]/tasks/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
@@ -176,7 +180,7 @@ export async function deleteTaskUser(taskId: string, userId: string) {
     .single();
 
   error && console.error(error);
-  revalidatePath("/[projectSlug]/task/[taskId]", "page");
+  revalidatePath("/[projectSlug]/tasks/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
@@ -219,7 +223,7 @@ export async function addTaskUser(taskId: string, userId: string) {
     .single();
 
   error && console.error(error);
-  revalidatePath("/[projectSlug]/task/[taskId]", "page");
+  revalidatePath("/[projectSlug]/tasks/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? status : undefined;
@@ -238,7 +242,7 @@ export async function updateTaskStatus(taskId: string, taskStatus: string) {
     .single();
 
   error && console.error(error);
-  revalidatePath("/[projectSlug]/task/[taskId]", "page");
+  revalidatePath("/[projectSlug]/tasks/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? resStatus : undefined;
@@ -257,7 +261,7 @@ export async function updateTaskProgress(taskId: string, progress: number) {
     .single();
 
   error && console.error(error);
-  revalidatePath("/[projectSlug]/task/[taskId]", "page");
+  revalidatePath("/[projectSlug]/tasks/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? resStatus : undefined;
@@ -279,7 +283,7 @@ export async function updateTaskDescription(
     .single();
 
   error && console.error(error);
-  revalidatePath("/[projectSlug]/task/[taskId]", "page");
+  revalidatePath("/[projectSlug]/tasks/[taskId]", "page");
 
   // エラー時のみステータスコードを返す
   const errorCode = error ? resStatus : undefined;
