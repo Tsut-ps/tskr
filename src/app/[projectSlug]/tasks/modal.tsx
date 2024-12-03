@@ -55,7 +55,7 @@ export function NewTeamModal({
         <Button
           size="sm"
           variant="outline"
-          className="h-auto my-4 ml-2 mr-6 p-6 [writing-mode:vertical-rl]"
+          className="h-auto my-4 ml-2 mr-6 px-16 py-6 [writing-mode:vertical-rl]"
         >
           <Plus className="h-4 w-4" />
           チームを追加
