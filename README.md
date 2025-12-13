@@ -33,5 +33,5 @@ SUPABASE_ANON_KEY=<Supabase/ProjectのAnonKey>
 https://supabase.com/docs/guides/api/rest/generating-types
 
 ```
-npx supabase gen types --lang=typescript --project-id <Supabase/ProjectのID> --schema public > src/types/database.types.ts
+npx supabase gen types typescript --project-id <Supabase/ProjectのID> --schema public > src/types/database.types.ts
 ```
