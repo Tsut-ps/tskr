@@ -50,18 +50,28 @@ export const getDateColor = (dueDate: string, status?: string) => {
 
 /** タスクの作成日時と更新日時をフォーマット */
 export const formatTaskDate = (createdAt: string, updatedAt: string) => {
-  const createdDate = parseISO(createdAt);
-  const updatedDate = parseISO(updatedAt);
-
   // 同じ場合は更新がないと判定
-  const isSameDate = createdDate.getTime() === updatedDate.getTime();
+  const isSameDate = createdAt === updatedAt;
 
-  const createdTime = format(createdDate, "PPP(E) HH:mm", {
-    locale: ja,
+  // UTC時刻を日本時間でフォーマット
+  const createdTime = new Date(createdAt).toLocaleString("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
-  const updatedTime = format(updatedDate, "PPP(E) HH:mm", {
-    locale: ja,
+  const updatedTime = new Date(updatedAt).toLocaleString("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 
   return { createdTime, updatedTime, isSameDate };
