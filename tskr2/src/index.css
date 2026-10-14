@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* Discord 風のダークテーマ (tskr の shadcn トークン名を維持して配色だけ変更) */
+@theme {
+  --font-sans: "Inter", "Noto Sans JP", system-ui, sans-serif;
+  --color-background: #313338;
+  --color-foreground: #dbdee1;
+  --color-rail: #1e1f22;
+  --color-sidebar: #2b2d31;
+  --color-card: #2b2d31;
+  --color-primary: #5865f2;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #4e5058;
+  --color-secondary-foreground: #ffffff;
+  --color-accent: #404249;
+  --color-accent-foreground: #f2f3f5;
+  --color-muted-foreground: #949ba4;
+  --color-destructive: #da373c;
+  --color-destructive-foreground: #ffffff;
+  --color-success: #23a559;
+  --color-border: #3f4147;
+  --color-input: #1e1f22;
+  --color-ring: #5865f2;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}

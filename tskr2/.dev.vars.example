@@ -1,0 +1,6 @@
+# cp .dev.vars.example .dev.vars (本番は `wrangler secret put <NAME>`)
+BETTER_AUTH_SECRET=change-me-32-bytes-or-more-random-string
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
