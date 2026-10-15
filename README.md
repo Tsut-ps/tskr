@@ -1,7 +1,11 @@
 # tskr
 
-ログイン不要の進捗管理ツール (フロントエンド部分)  
-※バックエンドは Supabase に構築する予定
+ログイン不要のシンプルな進捗管理ツール (フロントエンド部分)  
+※バックエンドは Supabase に構築
+
+<img width="1351" height="585" alt="image" src="https://github.com/user-attachments/assets/e7df64ff-7022-43d3-8789-d021fc25de2f" />
+
+<img width="1360" height="604" alt="image" src="https://github.com/user-attachments/assets/7f9c7596-04dd-4cf3-bf03-6020aef8246f" />
 
 ## 環境構築
 
